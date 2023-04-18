@@ -1,4 +1,29 @@
 {
   "name": "sandbox",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@sandbox/eslint-config": "workspace:^",
+    "@sandbox/prettier-config": "workspace:^",
+    "@typescript-eslint/eslint-plugin": "^5.59.0",
+    "@typescript-eslint/parser": "^5.59.0",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.4"
+  },
+  "prettier": "@sandbox/prettier-config",
+  "eslintConfig": {
+    "extends": "@sandbox/eslint-config",
+    "root": true
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint"
+    ],
+    "*.{yml,yaml,json,html,md}": [
+      "prettier --write"
+    ]
+  }
 }
