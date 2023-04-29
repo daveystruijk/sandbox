@@ -1,0 +1,9 @@
+{
+  "name": "@sandbox/game-backend",
+  "scripts": {
+    "start": "cargo run",
+    "dev": "cargo watch -x run",
+    "build": "cargo build",
+    "test": "cargo test"
+  }
+}
