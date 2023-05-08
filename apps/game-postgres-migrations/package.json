@@ -1,0 +1,15 @@
+{
+  "name": "game-postgres-migrations",
+  "type": "module",
+  "scripts": {
+    "migrate": "ts-node src/migrate.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "postgres-migrations": "^5.3.0",
+    "zod": "^3.21.4"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "game-postgres",
+  "scripts": {
+    "dev": "docker-compose up"
+  }
+}

@@ -1,2 +1,6 @@
 .pnpm-store
 node_modules
+target
+volumes
+.DS_Store
+**/*.env

@@ -1,3 +1,4 @@
 
 # Treat files as binary to hide them from git diff:
 **/pnpm-lock.yaml binary
+**/Cargo.lock binary

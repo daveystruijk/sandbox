@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "apps/game-backend",
+    "apps/game-postgres-entities",
+]
