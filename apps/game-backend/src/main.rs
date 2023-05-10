@@ -1,6 +1,6 @@
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router, Server};
-use game_postgres_entities::{user, user_item};
-use sea_orm::{Database, DatabaseConnection};
+use game_postgres_entities::{user::Entity as User, user_item::Entity as UserItem};
+use sea_orm::{ConnectionTrait, Database, DatabaseConnection, EntityTrait};
 use serde_json::{json, Value};
 use std::env;
 
@@ -9,8 +9,14 @@ struct AppState {
     pg: DatabaseConnection,
 }
 
-async fn index(state: State<AppState>) -> Result<Json<Value>, (StatusCode, &'static str)> {
+async fn index(ctx: State<AppState>) -> Result<Json<Value>, (StatusCode, &'static str)> {
     let response = json!({"status": "ok"}).into();
+
+    let users = match User::find().all(&ctx.pg).await {
+        Ok(rows) => serde_json::to_string(&rows),
+        Err(_) => return Err((StatusCode::INTERNAL_SERVER_ERROR, "Failed to load users")),
+    };
+
     Ok(Json(response))
 }
 
@@ -34,7 +40,9 @@ async fn start() -> anyhow::Result<()> {
         .into_make_service();
 
     // Server
-    axum::Server::bind(&"0.0.0.0:1234".parse()?).serve(app).await?;
+    axum::Server::bind(&"0.0.0.0:1234".parse()?)
+        .serve(app)
+        .await?;
 
     Ok(())
 }
