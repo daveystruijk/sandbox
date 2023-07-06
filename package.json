@@ -2,7 +2,8 @@
   "name": "sandbox",
   "private": true,
   "scripts": {
-    "prepare": "./.githooks/install.sh"
+    "prepare": "./.githooks/install.sh",
+    "ci": "./scripts/ci.ts"
   },
   "devDependencies": {
     "@sandbox/eslint-config": "workspace:^",

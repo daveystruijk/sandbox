@@ -1,4 +1,5 @@
 packages:
-  - "libs/**"
-  - "apps/**"
-  - "scripts"
+  - 'libs/**'
+  - 'apps/**'
+  - 'scripts'
+  - 'deployment'
