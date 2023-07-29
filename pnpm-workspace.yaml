@@ -2,4 +2,4 @@ packages:
   - 'libs/**'
   - 'apps/**'
   - 'scripts'
-  - 'deployment'
+  - 'infra'

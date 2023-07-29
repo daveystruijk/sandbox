@@ -1,5 +1,5 @@
 {
-  "name": "game-postgres-migrations",
+  "name": "@sandbox/game-postgres-migrations",
   "type": "module",
   "scripts": {
     "migrate": "ts-node src/migrate.ts"

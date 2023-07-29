@@ -2,7 +2,7 @@
   "name": "sandbox",
   "private": true,
   "scripts": {
-    "prepare": "./.githooks/install.sh",
+    "setup:githooks": "git config core.hooksPath .githooks",
     "ci": "./scripts/ci.ts"
   },
   "devDependencies": {
