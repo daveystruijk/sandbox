@@ -1,3 +1,11 @@
 {
-  "name": "@sandbox/admin-backend"
+  "name": "@sandbox/admin-panel-backend",
+  "dependencies": {
+    "@trpc/server": "^10.36.0",
+    "ws": "^8.13.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.5"
+  }
 }
