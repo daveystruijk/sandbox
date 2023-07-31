@@ -1,9 +1,10 @@
 {
   "name": "@sandbox/infra",
+  "type": "module",
   "devDependencies": {
     "@types/node": "20.4.5",
     "aws-cdk": "2.89.0",
-    "ts-node": "^10.9.1",
+    "tsx": "^3.12.7",
     "typescript": "~5.1.6"
   },
   "dependencies": {

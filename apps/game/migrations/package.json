@@ -2,10 +2,11 @@
   "name": "@sandbox/game-postgres-migrations",
   "type": "module",
   "scripts": {
-    "migrate": "ts-node src/migrate.ts"
+    "migrate": "tsx src/migrate.ts"
   },
   "devDependencies": {
-    "@types/node": "^18.17.1"
+    "@types/node": "^18.17.1",
+    "tsx": "^3.12.7"
   },
   "dependencies": {
     "dotenv": "^16.3.1",

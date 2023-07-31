@@ -1,5 +1,5 @@
 {
-  "app": "ts-node src/index.ts",
+  "app": "./node_modules/.bin/tsx src/index.ts",
   "versionReporting": false,
   "watch": {
     "include": ["**"],
