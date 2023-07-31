@@ -1,4 +1,4 @@
-CREATE TABLE "user" (
+CREATE TABLE "users" (
   "id" SERIAL PRIMARY KEY,
   "username" varchar not null,
   "email" varchar,
@@ -6,7 +6,7 @@ CREATE TABLE "user" (
   "created_at" timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "user_item" (
+CREATE TABLE "users_items" (
   "id" SERIAL PRIMARY KEY,
   "user_id" integer not null,
   "item_id" integer not null,

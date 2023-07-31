@@ -6,8 +6,6 @@ use axum::{
     response::IntoResponse,
 };
 use futures::{sink::SinkExt, stream::StreamExt};
-use game_postgres_entities::user::Entity as User;
-use sea_orm::EntityTrait;
 use std::{borrow::Cow, net::SocketAddr, ops::ControlFlow};
 
 use crate::AppContext;
@@ -25,10 +23,6 @@ pub async fn ws_handler(
 
 /// Actual websocket statemachine (one will be spawned per connection)
 async fn handle_socket(mut socket: WebSocket, who: SocketAddr, ctx: State<AppContext>) {
-    let users = User::find().into_json().all(&ctx.pg).await.unwrap();
-
-    println!("{:?}", users);
-
     //send a ping (unsupported by some browsers) just to kick things off and get a response
     if socket.send(Message::Ping(vec![1, 2, 3])).await.is_ok() {
         println!("Pinged {}...", who);

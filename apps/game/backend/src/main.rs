@@ -1,25 +1,37 @@
 use axum::{extract::State, http::StatusCode, routing::get, Json, Router, Server};
-use game_postgres_entities::user::Entity as User;
-use sea_orm::{Database, DatabaseConnection, EntityTrait};
-use serde_json::Value;
-use std::env;
+use serde::Serialize;
+use sqlx::{postgres::PgPoolOptions, query_as, PgPool};
+use std::{env, time::Duration};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod websocket;
 
 #[derive(Clone)]
 pub struct AppContext {
-    pg: DatabaseConnection,
+    pg: PgPool,
 }
 
-async fn index(ctx: State<AppContext>) -> Result<Json<Value>, (StatusCode, &'static str)> {
-    let users = User::find()
-        .into_json()
-        .all(&ctx.pg)
+#[derive(Serialize)]
+struct UserResult {
+    id: i32,
+    username: String,
+    email: Option<String>,
+}
+
+async fn get_users(pg: &PgPool) -> Result<Vec<UserResult>, sqlx::Error> {
+    query_as!(UserResult, "SELECT id, username, email FROM users")
+        .fetch_all(pg)
+        .await
+}
+
+async fn index(
+    ctx: State<AppContext>,
+) -> Result<Json<Vec<UserResult>>, (StatusCode, &'static str)> {
+    let users = get_users(&ctx.pg)
         .await
         .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Failed to load users"))?;
 
-    Ok(Json(users.into()))
+    Ok(Json(users))
 }
 
 #[tokio::main]
@@ -42,9 +54,11 @@ async fn start() -> anyhow::Result<()> {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
 
     // Initialize database connection
-    let pg = Database::connect(database_url)
-        .await
-        .expect("Database connection failed");
+    let pg = PgPoolOptions::new()
+        .acquire_timeout(Duration::from_secs(4))
+        .max_connections(4)
+        .connect(&database_url)
+        .await?;
 
     // Build app context
     let ctx = AppContext { pg };

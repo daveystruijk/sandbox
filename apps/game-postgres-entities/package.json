@@ -1,6 +1,0 @@
-{
-  "name": "game-postgres-entities",
-  "scripts": {
-    "generate": "sea-orm-cli generate entity -l -o src/ --ignore-tables migrations --with-serde both"
-  }
-}
