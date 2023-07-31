@@ -1,9 +1,16 @@
-use axum::{extract::State, http::StatusCode, routing::get, Json, Router, Server};
-use serde::Serialize;
+use axum::{
+    extract::State,
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    routing::get,
+    Json, Router, Server,
+};
+use serde_json::Value;
 use sqlx::{postgres::PgPoolOptions, query_as, PgPool};
 use std::{env, time::Duration};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
+mod queries;
 mod websocket;
 
 #[derive(Clone)]
@@ -11,27 +18,13 @@ pub struct AppContext {
     pg: PgPool,
 }
 
-#[derive(Serialize)]
-struct UserResult {
-    id: i32,
-    username: String,
-    email: Option<String>,
-}
+async fn index(ctx: State<AppContext>) -> Response {
+    let users = match queries::users::fetch_all_users(&ctx.pg).await {
+        Ok(result) => result,
+        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    };
 
-async fn get_users(pg: &PgPool) -> Result<Vec<UserResult>, sqlx::Error> {
-    query_as!(UserResult, "SELECT id, username, email FROM users")
-        .fetch_all(pg)
-        .await
-}
-
-async fn index(
-    ctx: State<AppContext>,
-) -> Result<Json<Vec<UserResult>>, (StatusCode, &'static str)> {
-    let users = get_users(&ctx.pg)
-        .await
-        .map_err(|_| (StatusCode::INTERNAL_SERVER_ERROR, "Failed to load users"))?;
-
-    Ok(Json(users))
+    Json(users).into_response()
 }
 
 #[tokio::main]
