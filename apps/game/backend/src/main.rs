@@ -5,8 +5,7 @@ use axum::{
     routing::get,
     Json, Router, Server,
 };
-use serde_json::Value;
-use sqlx::{postgres::PgPoolOptions, query_as, PgPool};
+use sqlx::{postgres::PgPoolOptions, PgPool};
 use std::{env, time::Duration};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
