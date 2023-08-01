@@ -3,30 +3,47 @@ import { For, Match, Switch } from 'solid-js';
 
 import { client } from './client';
 
-const fetchText = () => ({
-  queryKey: ['fetchText'],
+const fetchTables = () => ({
+  queryKey: ['fetchTables'],
   queryFn: async () => {
-    const text = await client.getText.query();
+    const text = await client.getTables.query();
+    console.log(text);
     return text;
   },
 });
 
+function TablesMenuItem({ table }) {
+  return (
+    <div>
+      <p>{table.table_name}</p>
+    </div>
+  );
+}
+
+function TablesMenu({ tables }) {
+  return (
+    <div class="">
+      <Switch>
+        <Match when={tables.isLoading}>
+          <p>Loading...</p>
+        </Match>
+        <Match when={tables.isError}>
+          <p>Error: {tables.error.message}</p>
+        </Match>
+        <Match when={tables.isSuccess}>
+          <For each={tables.data}>{(table) => <TablesMenuItem table={table} />}</For>
+        </Match>
+      </Switch>
+    </div>
+  );
+}
+
 export default function Page() {
-  const query = createQuery(fetchText);
+  const tables = createQuery(fetchTables);
 
   return (
     <div>
-      <Switch>
-        <Match when={query.isLoading}>
-          <p>Loading...</p>
-        </Match>
-        <Match when={query.isError}>
-          <p>Error: {query.error.message}</p>
-        </Match>
-        <Match when={query.isSuccess}>
-          <For each={query.data}>{(todo) => <p>{todo}</p>}</For>
-        </Match>
-      </Switch>
+      <TablesMenu tables={tables} />
     </div>
   );
 }

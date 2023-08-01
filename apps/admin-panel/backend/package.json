@@ -1,18 +1,20 @@
 {
   "name": "@sandbox/admin-panel-backend",
   "scripts": {
-    "dev": "NODE_ENV=development tsx watch src/server.ts"
+    "dev": "NODE_ENV=development tsx watch --clear-screen=false src/server.ts"
   },
   "dependencies": {
     "@trpc/server": "^10.36.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "pg": "^8.11.2",
     "superjson": "^1.13.1",
     "ws": "^8.13.0",
     "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
+    "@types/pg": "^8.10.2",
     "@types/ws": "^8.5.5"
   }
 }
