@@ -83,6 +83,9 @@ importers:
 
   apps/admin-panel/frontend:
     dependencies:
+      '@solidjs/router':
+        specifier: ^0.8.2
+        version: 0.8.2(solid-js@1.7.8)
       '@tanstack/solid-query':
         specifier: ^5.0.0-beta.9
         version: 5.0.0-beta.9(solid-js@1.7.8)
@@ -1653,6 +1656,17 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
+
+  /@solidjs/router@0.8.2(solid-js@1.7.8):
+    resolution:
+      {
+        integrity: sha512-gUKW+LZqxtX6y/Aw6JKyy4gQ9E7dLqp513oB9pSYJR1HM5c56Pf7eijzyXX+b3WuXig18Cxqah4tMtF0YGu80w==,
+      }
+    peerDependencies:
+      solid-js: ^1.5.3
+    dependencies:
+      solid-js: 1.7.8
+    dev: false
 
   /@tanstack/query-core@5.0.0-beta.9:
     resolution:

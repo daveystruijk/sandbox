@@ -1,9 +1,9 @@
 import { createTRPCProxyClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 
-import type { Router } from '@sandbox/admin-panel-backend/src/router';
+import type { AppRouter } from '@sandbox/admin-panel-backend/src/router';
 
-export const client = createTRPCProxyClient<Router>({
+export const client = createTRPCProxyClient<AppRouter>({
   transformer: superjson,
   links: [
     httpLink({

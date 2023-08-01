@@ -1,3 +1,4 @@
+import { A, Route, Routes, useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { For, Match, Switch } from 'solid-js';
 
@@ -14,15 +15,19 @@ const fetchTables = () => ({
 
 function TablesMenuItem({ table }) {
   return (
-    <div>
-      <p>{table.table_name}</p>
-    </div>
+    <A
+      href={`/table/${table.table_name}`}
+      end={true}
+      class="hover:bg-slate-300 px-2 py-1 mx-2 rounded"
+    >
+      {table.table_name}
+    </A>
   );
 }
 
 function TablesMenu({ tables }) {
   return (
-    <div class="">
+    <div class="flex flex-col w-48">
       <Switch>
         <Match when={tables.isLoading}>
           <p>Loading...</p>
@@ -38,12 +43,27 @@ function TablesMenu({ tables }) {
   );
 }
 
+function Header() {
+  return <div>Logo</div>;
+}
+
+function TableView() {
+  const params = useParams();
+  return <div class="grow bg-white rounded-tl">View</div>;
+}
+
 export default function Page() {
   const tables = createQuery(fetchTables);
 
   return (
-    <div>
-      <TablesMenu tables={tables} />
+    <div class="flex flex-col h-screen">
+      <Header />
+      <div class="flex flex-row grow">
+        <TablesMenu tables={tables} />
+        <Routes>
+          <Route path="/table/:name" component={TableView} />
+        </Routes>
+      </div>
     </div>
   );
 }
