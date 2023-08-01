@@ -11,6 +11,17 @@
 - Use rust for backends (but use package.json for actions)
 - Main verbs: start, dev, build, test, deploy
 
+# Sandbox Apps
+
+- Game: A multiplayer browser game.
+
+  - Backend: Rust (Axum)
+  - Frontend: Solid.js
+
+- Admin Panel: A generic app to make managing SQL databases easier.
+  - Backend: tRPC
+  - Frontend: Solid.js
+
 # TODO
 
 - [ ] Find out way to make managing database migrations less cumbersome

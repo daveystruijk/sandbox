@@ -1,7 +1,13 @@
-import type { Component } from 'solid-js';
+import { QueryClient, QueryClientProvider } from '@tanstack/solid-query';
 
-const App: Component = () => {
-  return <p class="text-4xl text-green-700 text-center py-20">Hello tailwind!</p>;
-};
+import Page from './Page';
 
-export default App;
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Page />
+    </QueryClientProvider>
+  );
+}

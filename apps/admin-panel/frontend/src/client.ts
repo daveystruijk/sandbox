@@ -1,18 +1,13 @@
-import { createTRPCProxyClient, httpLink, splitLink, wsLink } from '@trpc/client';
+import { createTRPCProxyClient, httpLink } from '@trpc/client';
+import superjson from 'superjson';
 
-import type { AppRouter } from '@sandbox/admin-panel-backend/src/index';
+import type { Router } from '@sandbox/admin-panel-backend/src/router';
 
-const trpc = createTRPCProxyClient<AppRouter>({
+export const client = createTRPCProxyClient<Router>({
+  transformer: superjson,
   links: [
-    // call subscriptions through websockets and the rest over http
     httpLink({
       url: `http://localhost:2022`,
     }),
   ],
 });
-
-async function main() {
-  const helloResponse = await trpc.userById.query();
-}
-
-void main();
