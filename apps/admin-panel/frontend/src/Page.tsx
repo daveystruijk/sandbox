@@ -1,6 +1,5 @@
 import { A, Route, Routes } from '@solidjs/router';
-import { createQuery } from '@tanstack/solid-query';
-import { For, Match, Suspense, Switch, createResource } from 'solid-js';
+import { For, Suspense, createResource } from 'solid-js';
 
 import TableView from './TableView';
 import { client } from './client';
@@ -10,7 +9,7 @@ function TablesMenuItem({ table }) {
     <A
       href={`/table/${table.table_name}`}
       end={true}
-      class="hover:bg-slate-300 px-2 py-1 mx-2 rounded"
+      class="hover:bg-slate-300 px-2 py-1 mx-2 rounded text-xs text-slate-900"
     >
       {table.table_name}
     </A>
@@ -19,7 +18,8 @@ function TablesMenuItem({ table }) {
 
 function TablesMenu({ tables }) {
   return (
-    <div class="flex flex-col w-48">
+    <div class="flex flex-col w-48 shrink-0">
+      <div class="py-1 px-3 text-xs text-slate-600 text-center font-semibold uppercase">Tables</div>
       <Suspense fallback="Loading...">
         <For each={tables()}>{(table) => <TablesMenuItem table={table} />}</For>
       </Suspense>
@@ -28,7 +28,11 @@ function TablesMenu({ tables }) {
 }
 
 function Header() {
-  return <div>Logo</div>;
+  return (
+    <div class="h-12 shrink-0">
+      <A href="/">Logo</A>
+    </div>
+  );
 }
 
 export default function Page() {
@@ -39,13 +43,14 @@ export default function Page() {
   return (
     <div class="flex flex-col h-screen">
       <Header />
-      <div class="flex flex-row grow">
+      <div class="flex flex-row grow w-screen">
         <TablesMenu tables={tables} />
-        <div class="grow bg-white rounded-tl">
+        <div class="flex flex-col grow bg-white rounded-t shadow-md overflow-hidden">
           <Routes>
             <Route path="/table/:name" component={TableView} />
           </Routes>
         </div>
+        <div class="flex flex-col w-12 shrink-0"></div>
       </div>
     </div>
   );

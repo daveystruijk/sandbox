@@ -1,34 +1,39 @@
 import { useParams } from '@solidjs/router';
-import { createQuery } from '@tanstack/solid-query';
 import { createSolidTable, flexRender, getCoreRowModel } from '@tanstack/solid-table';
-import { For, Match, Show, Suspense, Switch, createResource } from 'solid-js';
+import { For, Show, createResource } from 'solid-js';
 
 import { client } from './client';
 
 function Table({ name, details }) {
   const table = createSolidTable({
     get data() {
-      return details().data;
+      return details().data.map((row) => ({
+        ...row,
+      }));
     },
     get columns() {
-      return details().columns.map((row) => ({
-        id: row.column_name,
-        header: row.column_name,
+      return details().columns.map((col) => ({
+        id: col.column_name,
+        header: col.column_name,
+        accessorKey: col.column_name,
       }));
     },
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <div class="flex grow">
-      <table>
-        <thead>
+    <div class="relative overflow-x-auto h-full">
+      <table class="w-full">
+        <thead class="border-b border-slate-200">
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
-              <tr>
+              <tr class="px-2">
                 <For each={headerGroup.headers}>
-                  {(header) => (
-                    <th>
+                  {(header, i) => (
+                    <th
+                      class="px-1 py-1 border-slate-200 text-left text-xs text-slate-600"
+                      classList={{ 'border-l': i() !== 0 }}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -42,9 +47,13 @@ function Table({ name, details }) {
         <tbody>
           <For each={table.getRowModel().rows}>
             {(row) => (
-              <tr>
+              <tr class="hover:bg-slate-50">
                 <For each={row.getVisibleCells()}>
-                  {(cell) => <td>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>}
+                  {(cell) => (
+                    <td class="px-1 py-1 truncate text-left text-xs text-slate-900">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  )}
                 </For>
               </tr>
             )}
@@ -85,6 +94,9 @@ export default function TableView() {
   return (
     <Show when={details()}>
       <Table name={params.name} details={details} />
+      <Show when={false}>
+        <div class="flex flex-col h-12 shrink-0 bg-slate-400"></div>
+      </Show>
     </Show>
   );
 }
