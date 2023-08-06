@@ -83,15 +83,15 @@ importers:
       '@solidjs/router':
         specifier: ^0.8.2
         version: 0.8.2(solid-js@1.7.8)
-      '@tanstack/solid-query':
-        specifier: ^5.0.0-beta.9
-        version: 5.0.0-beta.9(solid-js@1.7.8)
       '@tanstack/solid-table':
         specifier: ^8.9.3
         version: 8.9.3(solid-js@1.7.8)
       '@trpc/client':
         specifier: ^10.36.0
         version: 10.36.0(@trpc/server@10.36.0)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       solid-js:
         specifier: ^1.7.8
         version: 1.7.8
@@ -102,6 +102,9 @@ importers:
       '@sandbox/admin-panel-backend':
         specifier: workspace:^
         version: link:../backend
+      '@types/lodash':
+        specifier: ^4.14.196
+        version: 4.14.196
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.14(postcss@8.4.27)
@@ -1668,25 +1671,6 @@ packages:
       solid-js: 1.7.8
     dev: false
 
-  /@tanstack/query-core@5.0.0-beta.9:
-    resolution:
-      {
-        integrity: sha512-SXaTZ+K/Gw4kd7ZAtHrc0AgffcdLVOHMX0ECgDbyZ8F5hxwS/Fi7F3r1FTiVBxDf1QW4oAiHQW65zhGWikRSng==,
-      }
-    dev: false
-
-  /@tanstack/solid-query@5.0.0-beta.9(solid-js@1.7.8):
-    resolution:
-      {
-        integrity: sha512-/qvZzHo4AFY/swBAYV0eJZcWDn30x3uIPWle73j19QBZN0pig76mByboJZvNY/cT00t53EpmHLrY4166GsxgSA==,
-      }
-    peerDependencies:
-      solid-js: ^1.6.0
-    dependencies:
-      '@tanstack/query-core': 5.0.0-beta.9
-      solid-js: 1.7.8
-    dev: false
-
   /@tanstack/solid-table@8.9.3(solid-js@1.7.8):
     resolution:
       {
@@ -1808,6 +1792,13 @@ packages:
     resolution:
       {
         integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==,
+      }
+    dev: true
+
+  /@types/lodash@4.14.196:
+    resolution:
+      {
+        integrity: sha512-22y3o88f4a94mKljsZcanlNWPzO0uBsBdzLAngf2tp533LzZcQzb6+eZPJ+vCTt+bqF2XnvT9gejTLsAcJAJyQ==,
       }
     dev: true
 
@@ -4008,7 +3999,6 @@ packages:
       {
         integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==,
       }
-    dev: true
 
   /log-update@4.0.0:
     resolution:

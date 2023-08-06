@@ -1,3 +1,3 @@
-export function getTables() {
+export const getTables = () => {
   console.log('todo');
-}
+};

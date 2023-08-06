@@ -9,7 +9,7 @@ const server = createHTTPServer({
   middleware: config.NODE_ENV === 'development' ? cors() : undefined,
   onError: (opts) => {
     const { error } = opts;
-    console.error(error);
+    console.error(error.cause);
   },
 });
 

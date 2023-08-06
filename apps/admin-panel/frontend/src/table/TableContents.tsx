@@ -1,29 +1,58 @@
-import { useParams } from '@solidjs/router';
-import { createSolidTable, flexRender, getCoreRowModel } from '@tanstack/solid-table';
-import { For, Show, createResource } from 'solid-js';
+import {
+  ColumnDef,
+  RowData,
+  createSolidTable,
+  flexRender,
+  getCoreRowModel,
+} from '@tanstack/solid-table';
+import { clamp } from 'lodash';
+import { Component, For, createSignal } from 'solid-js';
 
-import { client } from './client';
+import { Column, Entry } from '@sandbox/admin-panel-backend/src/router';
 
-function Table({ name, details }) {
+import { Cell } from './Cell';
+import { ColumnHeader } from './ColumnHeader';
+import { columnWidth } from './calculations';
+
+declare module '@tanstack/solid-table' {
+  // Add metadata to column information
+  interface ColumnMeta<TData extends RowData, TValue> {
+    dataType: string;
+    isDisabled: boolean;
+  }
+}
+
+export const TableContents: Component<{ contents: { columns: Column[]; entries: Entry[] } }> = (
+  props,
+) => {
+  const [mutations, setMutations] = createSignal([]);
+
   const table = createSolidTable({
     get data() {
-      return details().data.map((row) => ({
-        ...row,
-      }));
+      return props.contents.entries;
     },
     get columns() {
-      return details().columns.map((col) => ({
-        id: col.column_name,
-        header: col.column_name,
-        accessorKey: col.column_name,
-      }));
+      return props.contents.columns.map(
+        (column) =>
+          ({
+            id: column.column_name,
+            accessorKey: column.column_name,
+            header: () => <ColumnHeader column={column} />,
+            cell: (info) => <Cell info={info} />,
+            size: columnWidth(props.contents.entries, column),
+            meta: {
+              dataType: column.data_type,
+              isDisabled: column.is_disabled,
+            },
+          } as ColumnDef<Entry, unknown>),
+      );
     },
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
     <div class="relative overflow-x-auto h-full">
-      <table class="w-full">
+      <table class="">
         <thead class="border-b border-slate-200">
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
@@ -31,8 +60,13 @@ function Table({ name, details }) {
                 <For each={headerGroup.headers}>
                   {(header, i) => (
                     <th
-                      class="px-1 py-1 border-slate-200 text-left text-xs text-slate-600"
+                      class="border-slate-200 text-left text-xs sticky"
                       classList={{ 'border-l': i() !== 0 }}
+                      style={{
+                        width: `${header.column.columnDef.size}px`,
+                        'min-width': `${clamp(header.column.columnDef.size, 40, 100)}px`,
+                        'max-width': '400px',
+                      }}
                     >
                       {header.isPlaceholder
                         ? null
@@ -47,10 +81,10 @@ function Table({ name, details }) {
         <tbody>
           <For each={table.getRowModel().rows}>
             {(row) => (
-              <tr class="hover:bg-slate-50">
+              <tr class="h-6 hover:bg-slate-50">
                 <For each={row.getVisibleCells()}>
                   {(cell) => (
-                    <td class="px-1 py-1 truncate text-left text-xs text-slate-900">
+                    <td class="h-6 text-left text-xs p-0 hover:bg-slate-100">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   )}
@@ -79,24 +113,4 @@ function Table({ name, details }) {
       </table>
     </div>
   );
-}
-
-export default function TableView() {
-  const params = useParams<{ name: string }>();
-
-  const [details] = createResource(
-    () => [params.name] as const,
-    async ([name]) => {
-      return client.getTableDetails.query({ name });
-    },
-  );
-
-  return (
-    <Show when={details()}>
-      <Table name={params.name} details={details} />
-      <Show when={false}>
-        <div class="flex flex-col h-12 shrink-0 bg-slate-400"></div>
-      </Show>
-    </Show>
-  );
-}
+};
