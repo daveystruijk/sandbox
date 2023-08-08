@@ -25,7 +25,7 @@ export const router = t.router({
       [input.name],
     );
     const entries = await pg.manyOrNone<Entry>(
-      `SELECT * FROM ${new helpers.TableName(input.name)}`,
+      `SELECT * FROM ${new helpers.TableName(input.name)} LIMIT 200`,
     );
     return {
       columns: columns.map((column) => ({

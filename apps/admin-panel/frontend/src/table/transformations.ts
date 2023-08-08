@@ -1,4 +1,8 @@
 export const valueToInputString = (value, dataType) => {
+  if (value === null) {
+    return '';
+  }
+
   const mapping = {
     'character varying': (v) => v.toString(),
     'timestamp without time zone': (v: Date) =>
@@ -12,16 +16,9 @@ export const valueToInputString = (value, dataType) => {
           second: '2-digit',
         })
         .replace(' ', 'T'),
+    boolean: '',
+    integer: (v) => v.toString(),
   };
   const str = mapping[dataType] ? mapping[dataType](value) : value.toString();
   return str;
-};
-
-export const dataTypeToInputType = (dataType: string) => {
-  const mapping = {
-    'character varying': 'text',
-    'timestamp without time zone': 'datetime-local',
-    integer: 'number',
-  };
-  return mapping[dataType] || 'text';
 };

@@ -27,9 +27,6 @@ export const TablePage: Component = () => {
       <Match when={contents()}>
         <TableContents contents={contents()} />
       </Match>
-      <Show when={false}>
-        <div class="flex flex-col h-12 shrink-0 bg-slate-400"></div>
-      </Show>
     </Switch>
   );
 };

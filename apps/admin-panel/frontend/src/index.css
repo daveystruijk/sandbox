@@ -10,3 +10,39 @@ html, body {
 a.active {
   @apply bg-slate-300;
 }
+
+th {
+  @apply bg-white;
+  box-shadow: inset -1px -1px rgb(203 213 225); /* slate-300 */
+}
+
+tr {
+  @apply h-6;
+}
+
+tr:hover {
+  @apply bg-slate-50;
+}
+
+td {
+  @apply p-0;
+  @apply h-6;
+  @apply text-left;
+  @apply text-xs;
+}
+
+td:hover {
+  @apply bg-slate-200;
+}
+
+input {
+  @apply px-1 h-full w-full bg-transparent text-slate-900 truncate;
+}
+
+input:hover {
+  @apply text-clip;
+}
+
+input:focus {
+  @apply outline outline-slate-400 bg-white;
+}

@@ -1,19 +1,36 @@
-import { CellContext } from '@tanstack/solid-table';
 import { Component, createSignal } from 'solid-js';
 
-import { Entry } from '@sandbox/admin-panel-backend/src/router';
+import { Column } from '@sandbox/admin-panel-backend/src/router';
 
-import { dataTypeToInputType, valueToInputString } from './transformations';
+import { valueToInputString } from './transformations';
 
-export const Cell: Component<{ info: CellContext<Entry, unknown> }> = (props) => {
+const attributes = (props) => {
+  const byDataType = {
+    'character varying': { type: 'text' },
+    'timestamp without time zone': { type: 'datetime-local' },
+    integer: { type: 'text', inputmode: 'numeric' },
+    boolean: { type: 'checkbox', checked: props.value },
+  };
+
+  return byDataType[props.column.data_type];
+};
+
+export const Cell: Component<{
+  rowId: number;
+  key: string;
+  value: unknown;
+  column: Column;
+  setMutation: (rowId: number, key: string, value: unknown) => void;
+  unsetMutation: (rowId: number, key: string) => void;
+}> = (props) => {
   let inputRef: HTMLInputElement;
 
-  const [editing, setEditing] = createSignal(true);
+  const [editing, setEditing] = createSignal(false);
+  const [pendingChange, setPendingChange] = createSignal(undefined);
 
-  const value = valueToInputString(
-    props.info.getValue(),
-    props.info.column.columnDef.meta.dataType,
-  );
+  const value = pendingChange()
+    ? pendingChange()
+    : valueToInputString(props.value, props.column.data_type);
 
   const onEnter = () => {
     setEditing(true);
@@ -22,30 +39,35 @@ export const Cell: Component<{ info: CellContext<Entry, unknown> }> = (props) =>
   const onExit = () => {
     inputRef.blur();
     setEditing(false);
-    // TODO: update mutations
+    if (inputRef.value === props.value) {
+      setPendingChange(undefined);
+      props.unsetMutation(props.rowId, props.key);
+    } else {
+      setPendingChange(inputRef.value);
+      props.setMutation(props.rowId, props.key, inputRef.value);
+    }
   };
 
   return (
     <input
-      class="px-1 py-1 h-full w-full bg-transparent focus:outline outline-slate-400 focus:bg-white text-slate-900 truncate"
-      classList={{
-        'hover:cursor-not-allowed': props.info.column.columnDef.meta.isDisabled,
-      }}
       ref={inputRef}
-      type={dataTypeToInputType(props.info.column.columnDef.meta.dataType)}
       value={value}
-      disabled={props.info.column.columnDef.meta.isDisabled}
       onFocus={onEnter}
       onBlur={onExit}
+      classList={{
+        'hover:cursor-not-allowed': props.column.is_disabled,
+        'bg-orange-200': pendingChange() !== undefined,
+      }}
+      disabled={props.column.is_disabled}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
-          // TODO: reset value to last-pending or original
           onExit();
         }
         if (e.key === 'Enter') {
           onExit();
         }
       }}
+      {...attributes(props)}
     />
   );
 };

@@ -12,11 +12,15 @@ const Root: Component = () => {
   });
 
   return (
-    <div class="flex flex-col h-screen">
-      <div class="h-12 shrink-0">
-        <A href="/">Logo</A>
+    <div class="flex flex-col h-screen items-stretch">
+      <div class="flex flex-row h-12 shrink-0">
+        <div class="flex w-48">
+          <A href="/">Logo</A>
+        </div>
+        <div class="flex grow"></div>
+        <div class="flex w-12"></div>
       </div>
-      <div class="flex flex-row grow w-screen">
+      <div class="flex flex-row grow w-screen items-stretch overflow-hidden">
         <div class="flex flex-col w-48 shrink-0">
           <div class="py-1 px-3 text-xs text-slate-600 text-center font-semibold uppercase">
             Tables

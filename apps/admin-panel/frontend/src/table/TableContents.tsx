@@ -1,116 +1,102 @@
-import {
-  ColumnDef,
-  RowData,
-  createSolidTable,
-  flexRender,
-  getCoreRowModel,
-} from '@tanstack/solid-table';
-import { clamp } from 'lodash';
-import { Component, For, createSignal } from 'solid-js';
+import { clamp, isEmpty, keyBy } from 'lodash';
+import { Component, ErrorBoundary, For, Show, createMemo, createSignal } from 'solid-js';
 
 import { Column, Entry } from '@sandbox/admin-panel-backend/src/router';
 
+import { ErrorMessage } from '../components/ErrorMessage';
 import { Cell } from './Cell';
-import { ColumnHeader } from './ColumnHeader';
 import { columnWidth } from './calculations';
-
-declare module '@tanstack/solid-table' {
-  // Add metadata to column information
-  interface ColumnMeta<TData extends RowData, TValue> {
-    dataType: string;
-    isDisabled: boolean;
-  }
-}
 
 export const TableContents: Component<{ contents: { columns: Column[]; entries: Entry[] } }> = (
   props,
 ) => {
-  const [mutations, setMutations] = createSignal([]);
+  const [mutations, setMutations] = createSignal({});
+  const primaryKey = 'id'; // TODO: dynamic?
+  const columnsByName = createMemo(() => keyBy(props.contents.columns, 'column_name'));
 
-  const table = createSolidTable({
-    get data() {
-      return props.contents.entries;
-    },
-    get columns() {
-      return props.contents.columns.map(
-        (column) =>
-          ({
-            id: column.column_name,
-            accessorKey: column.column_name,
-            header: () => <ColumnHeader column={column} />,
-            cell: (info) => <Cell info={info} />,
-            size: columnWidth(props.contents.entries, column),
-            meta: {
-              dataType: column.data_type,
-              isDisabled: column.is_disabled,
-            },
-          } as ColumnDef<Entry, unknown>),
-      );
-    },
-    getCoreRowModel: getCoreRowModel(),
-  });
+  const setMutation = (rowId: number, key: string, value: unknown) => {
+    console.log(mutations());
+    setMutations((mutations) => ({
+      ...mutations,
+      [rowId]: {
+        ...mutations[rowId],
+        [key]: value,
+      },
+    }));
+  };
+
+  const unsetMutation = (rowId: number, key: string) => {
+    console.log(mutations());
+    const m = { ...mutations() };
+    delete m[rowId][key];
+    if (isEmpty(m[rowId])) {
+      delete m[rowId];
+    }
+    setMutations(m);
+  };
 
   return (
-    <div class="relative overflow-x-auto h-full">
-      <table class="">
-        <thead class="border-b border-slate-200">
-          <For each={table.getHeaderGroups()}>
-            {(headerGroup) => (
+    <div class="flex flex-col h-full">
+      <div class="relative overflow-x-auto h-full">
+        <ErrorBoundary fallback={<ErrorMessage />}>
+          <table class="">
+            <thead class="sticky top-0">
               <tr class="px-2">
-                <For each={headerGroup.headers}>
-                  {(header, i) => (
-                    <th
-                      class="border-slate-200 text-left text-xs sticky"
-                      classList={{ 'border-l': i() !== 0 }}
-                      style={{
-                        width: `${header.column.columnDef.size}px`,
-                        'min-width': `${clamp(header.column.columnDef.size, 40, 100)}px`,
-                        'max-width': '400px',
-                      }}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </th>
-                  )}
+                <For each={props.contents.columns}>
+                  {(column, i) => {
+                    const size = columnWidth(props.contents.entries, column);
+                    return (
+                      <th
+                        class="text-left text-xs"
+                        style={{
+                          width: `${Math.max(size, 40)}px`,
+                          'min-width': `${clamp(size, 40, 100)}px`,
+                          'max-width': '400px',
+                        }}
+                      >
+                        <div class="flex flex-col gap-1 px-1 py-1">
+                          <span class="text-slate-600">{column.column_name}</span>
+                          {/*<span class="text-slate-300">{props.column.data_type}</span>*/}
+                        </div>
+                      </th>
+                    );
+                  }}
                 </For>
               </tr>
-            )}
-          </For>
-        </thead>
-        <tbody>
-          <For each={table.getRowModel().rows}>
-            {(row) => (
-              <tr class="h-6 hover:bg-slate-50">
-                <For each={row.getVisibleCells()}>
-                  {(cell) => (
-                    <td class="h-6 text-left text-xs p-0 hover:bg-slate-100">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </tbody>
-        <tfoot>
-          <For each={table.getFooterGroups()}>
-            {(footerGroup) => (
-              <tr>
-                <For each={footerGroup.headers}>
-                  {(header) => (
-                    <th>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.footer, header.getContext())}
-                    </th>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </tfoot>
-      </table>
+            </thead>
+            <tbody>
+              <For each={props.contents.entries}>
+                {(row) => {
+                  return (
+                    <tr>
+                      <For each={Object.entries(row)}>
+                        {([key, value]) => (
+                          <td>
+                            <Cell
+                              rowId={row[primaryKey] as number}
+                              key={key}
+                              value={value}
+                              column={columnsByName()[key]}
+                              setMutation={setMutation}
+                              unsetMutation={unsetMutation}
+                            />
+                          </td>
+                        )}
+                      </For>
+                    </tr>
+                  );
+                }}
+              </For>
+            </tbody>
+          </table>
+        </ErrorBoundary>
+      </div>
+      <Show when={Object.keys(mutations()).length}>
+        <div class="flex h-16 bg-white p-2">
+          <div class="flex grow"></div>
+          <div class="flex w-12 bg-green-100">{Object.keys(mutations()).length} rows changed</div>
+        </div>
+      </Show>
     </div>
   );
 };
