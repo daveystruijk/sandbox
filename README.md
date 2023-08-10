@@ -3,6 +3,7 @@
 - Use as little boilerplate as possible
 - Use well-supported technologies that will last for a while
 - Dev feedback loop should stay fast
+- Find a good solution for frontend cross-platform dev (android, ios, web)
 
 # Architecture Decisions
 
