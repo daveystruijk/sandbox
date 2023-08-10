@@ -12,4 +12,9 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
   ],
+
+  rules: {
+    '@typescript-eslint/no-var-requires': 'warn',
+    '@typescript-eslint/triple-slash-reference': 'warn',
+  },
 };
