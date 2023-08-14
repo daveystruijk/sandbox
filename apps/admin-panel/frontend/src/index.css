@@ -31,10 +31,6 @@ td {
   @apply text-xs;
 }
 
-td:hover {
-  @apply bg-slate-200;
-}
-
 input {
   @apply px-1 h-full w-full bg-transparent text-slate-900 truncate;
 }
@@ -44,6 +40,12 @@ input:hover {
 }
 
 input:focus {
-  @apply outline outline-slate-400;
+  @apply outline outline-slate-400 bg-white;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+td:has(input:focus) {
   position: relative;
 }

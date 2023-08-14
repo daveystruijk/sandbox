@@ -2,6 +2,7 @@ import { Component, createMemo, createSignal } from 'solid-js';
 
 import { Column } from '@sandbox/admin-panel-backend/src/router';
 
+import { pixelWidthFromStringLength } from './calculations';
 import { inputStringFromValue, valueFromInputString } from './transformations';
 
 export const Cell: Component<{
@@ -14,11 +15,12 @@ export const Cell: Component<{
   let inputRef: HTMLInputElement;
 
   const [value, setValue] = createSignal(props.initialValue);
+  const [editing, setEditing] = createSignal(false);
 
   const hasChanges = createMemo(() => value() !== props.initialValue);
 
   const onInput = () => {
-    setValue(valueFromInputString(inputRef.value, props.column.dataType));
+    setValue(valueFromInputString(inputRef.value, props.column));
     if (hasChanges()) {
       props.setMutation(props.rowId, props.column.name, inputRef.value);
     } else {
@@ -36,13 +38,19 @@ export const Cell: Component<{
   return (
     <input
       ref={inputRef}
-      value={inputStringFromValue(value(), props.column.dataType)}
+      value={inputStringFromValue(value(), props.column)}
       onInput={onInput}
       classList={{
         'hover:cursor-not-allowed': props.column.isDisabled,
         'bg-orange-100': hasChanges(),
       }}
       disabled={props.column.isDisabled}
+      onFocus={() => {
+        setEditing(true);
+      }}
+      onBlur={() => {
+        setEditing(false);
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
           inputRef.blur();
@@ -51,6 +59,7 @@ export const Cell: Component<{
           inputRef.blur();
         }
       }}
+      placeholder={value() === null ? 'NULL' : undefined}
       {...extraProps[props.column.dataType]}
     />
   );

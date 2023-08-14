@@ -45,13 +45,15 @@ export const TableContents: Component<{ contents: { columns: Column[]; rows: Row
                         class="text-left text-xs"
                         style={{
                           width: `${Math.max(size, 40)}px`,
-                          'min-width': `${clamp(size, 40, 100)}px`,
-                          'max-width': '400px',
+                          'min-width': `${clamp(size, 40, 200)}px`,
                         }}
                       >
                         <div class="flex flex-col gap-1 px-1 py-1">
                           <span class="text-slate-600">{column.name}</span>
-                          {/*<span class="text-slate-300">{props.column.data_type}</span>*/}
+                          <span class="text-slate-300">
+                            {column.dataType}
+                            {column.isNullable ? '?' : ''}
+                          </span>
                         </div>
                       </th>
                     );

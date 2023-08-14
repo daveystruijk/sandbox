@@ -6,11 +6,14 @@ import { inputStringFromValue } from './transformations';
 
 const stringLengthToWidthFactor = 8;
 
+export const pixelWidthFromStringLength = (length: number) => {
+  return 20 + length * stringLengthToWidthFactor;
+};
+
 export const columnWidth = (rows: Row[], column: Column) => {
   const stringLengths = rows
     .map((row) => row[column.name])
-    .map((value) => inputStringFromValue(value, column.dataType) || '')
+    .map((value) => inputStringFromValue(value, column) || '')
     .map((s: string) => s.length);
-  const fittingWidth = 20 + max(stringLengths) * stringLengthToWidthFactor;
-  return fittingWidth;
+  return pixelWidthFromStringLength(max(stringLengths));
 };

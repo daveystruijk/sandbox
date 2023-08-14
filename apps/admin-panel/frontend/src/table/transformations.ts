@@ -1,8 +1,8 @@
 import { parseInt } from 'lodash';
 
-import { DataType } from '@sandbox/admin-panel-backend/src/router';
+import { Column, DataType } from '@sandbox/admin-panel-backend/src/router';
 
-export const inputStringFromValue = (value: unknown, dataType: DataType) => {
+export const inputStringFromValue = (value: unknown, column: Column) => {
   if (value === null) {
     return null;
   }
@@ -24,12 +24,17 @@ export const inputStringFromValue = (value: unknown, dataType: DataType) => {
     int4: (v) => v.toString(),
     json: (v) => (v ? JSON.stringify(v) : ''),
   };
-  const str = mapping[dataType] ? mapping[dataType](value) : value.toString();
+  const str = mapping[column.dataType] ? mapping[column.dataType](value) : value.toString();
   return str;
 };
 
-export const valueFromInputString = (inputString: string, dataType: DataType) => {
+export const valueFromInputString = (inputString: string, column: Column) => {
   if (inputString === null) {
+    return null;
+  }
+
+  // If the table is nullable, an empty string will convert to NULL values
+  if (inputString === '' && column.isNullable) {
     return null;
   }
 
@@ -37,10 +42,13 @@ export const valueFromInputString = (inputString: string, dataType: DataType) =>
     varchar: (s) => s,
     timestamp: (s) => new Date(s),
     boolean: (s) => s,
-    int4: (s) => parseInt(s),
+    int4: (s) => {
+      // TODO: strip chars
+      return parseInt(s);
+    },
     json: (s) => JSON.parse(s),
   };
 
-  const value = mapping[dataType] ? mapping[dataType](inputString) : inputString;
+  const value = mapping[column.dataType] ? mapping[column.dataType](inputString) : inputString;
   return value;
 };
