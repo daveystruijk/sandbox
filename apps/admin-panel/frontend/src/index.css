@@ -11,9 +11,17 @@ a.active {
   @apply bg-slate-300;
 }
 
+table {
+  min-width: 100%;
+}
+
 th {
   @apply bg-white;
   box-shadow: inset -1px -1px rgb(203 213 225); /* slate-300 */
+}
+
+th:last-child {
+  box-shadow: inset 0px -1px rgb(203, 213, 225); /* slate-300 */
 }
 
 tr {

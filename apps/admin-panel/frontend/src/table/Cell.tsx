@@ -1,8 +1,7 @@
-import { Component, createEffect, createMemo, createSignal } from 'solid-js';
+import { Component, createMemo, createSignal } from 'solid-js';
 
 import { Column } from '@sandbox/admin-panel-backend/src/router';
 
-import { pixelWidthFromStringLength } from './calculations';
 import { inputStringFromValue, valueFromInputString } from './transformations';
 
 export const Cell: Component<{
@@ -64,11 +63,7 @@ export const Cell: Component<{
         disabled={props.column.isDisabled}
         onFocus={() => {
           setEditing(true);
-          if (props.column.dataType === 'timestamp') {
-            inputRef.showPicker();
-          } else {
-            inputRef.reportValidity();
-          }
+          inputRef.reportValidity();
         }}
         onBlur={() => {
           setEditing(false);

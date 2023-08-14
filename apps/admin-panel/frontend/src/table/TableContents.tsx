@@ -1,15 +1,17 @@
 import { clamp, isEmpty, keyBy } from 'lodash';
-import { Component, ErrorBoundary, For, Show, createEffect, createMemo } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import { Component, ErrorBoundary, For, Show, createMemo } from 'solid-js';
+import { createStore, unwrap } from 'solid-js/store';
 
 import { Column, Row } from '@sandbox/admin-panel-backend/src/router';
 
 import { ErrorMessage } from '../components/ErrorMessage';
+import { client } from '../trpc';
 import { Cell } from './Cell';
 
-export const TableContents: Component<{ contents: { columns: Column[]; rows: Row[] } }> = (
-  props,
-) => {
+export const TableContents: Component<{
+  tableName: string;
+  contents: { columns: Column[]; rows: Row[] };
+}> = (props) => {
   const [mutations, setMutations] = createStore<Record<number, Row>>({});
   const primaryKey = 'id'; // TODO: dynamic?
   const columnsByName = createMemo(() => keyBy(props.contents.columns, 'name'));
@@ -27,6 +29,14 @@ export const TableContents: Component<{ contents: { columns: Column[]; rows: Row
     if (isEmpty(mutations[rowId])) {
       setMutations(rowId, undefined);
     }
+  };
+
+  const commitMutations = () => {
+    client.getMutationsPreview.query({
+      tableName: props.tableName,
+      updates: unwrap(mutations),
+      inserts: [],
+    });
   };
 
   return (
@@ -48,10 +58,10 @@ export const TableContents: Component<{ contents: { columns: Column[]; rows: Row
                       >
                         <div class="flex flex-col gap-1 px-1 py-1">
                           <span class="text-slate-600">{column.name}</span>
-                          <span class="text-slate-300">
+                          {/*<span class="text-slate-300">
                             {column.dataType}
                             {column.isNullable ? '?' : ''}
-                          </span>
+                          </span>*/}
                         </div>
                       </th>
                     );
@@ -87,7 +97,9 @@ export const TableContents: Component<{ contents: { columns: Column[]; rows: Row
         <div class="flex h-16 bg-white p-2">
           <div class="flex grow"></div>
           <div class="flex self-center">{Object.keys(mutations).length} rows changed</div>
-          <div class="flex w-12 bg-green-100">{Object.keys(mutations).length} rows changed</div>
+          <div class="flex w-12 bg-green-100" onClick={() => commitMutations()}>
+            Commit!
+          </div>
         </div>
       </Show>
     </div>

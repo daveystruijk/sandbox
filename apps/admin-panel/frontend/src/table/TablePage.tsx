@@ -8,12 +8,12 @@ import { TableContents } from './TableContents';
 import { columnWidth } from './calculations';
 
 export const TablePage: Component = () => {
-  const params = useParams<{ name: string }>();
+  const params = useParams<{ tableName: string }>();
 
   const [contents] = createResource(
-    () => [params.name] as const,
-    async ([name]) => {
-      const result = await client.getTableContents.query({ name });
+    () => [params.tableName] as const,
+    async ([tableName]) => {
+      const result = await client.getTableContents.query({ tableName });
       return {
         columns: result.columns.map((column) => ({
           ...column,
@@ -33,7 +33,7 @@ export const TablePage: Component = () => {
         <Spinner />
       </Match>
       <Match when={contents()}>
-        <TableContents contents={contents()} />
+        <TableContents tableName={params.tableName} contents={contents()} />
       </Match>
     </Switch>
   );

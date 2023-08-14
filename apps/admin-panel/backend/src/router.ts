@@ -1,22 +1,13 @@
 import { z } from 'zod';
 
 import { helpers, pg } from './postgres';
+import {
+  PostgresColumn,
+  PostgresUnderlyingDataType,
+  arbitraryRows,
+  informationSchema,
+} from './queries';
 import { t } from './trpc';
-
-export type PostgresUnderlyingDataType =
-  | 'boolean'
-  | 'int4'
-  | 'varchar'
-  | 'timestamp'
-  | 'timestamptz'
-  | 'json';
-
-export type PostgresColumn = {
-  column_name: string;
-  udt_name: PostgresUnderlyingDataType;
-  is_nullable: string;
-  is_updatable: string; // 'NO' for views
-};
 
 export type DataType = PostgresUnderlyingDataType;
 
@@ -42,35 +33,54 @@ const columnFromPostgresColumn = (pgColumn: PostgresColumn): Column => ({
 
 export const router = t.router({
   getTables: t.procedure.query(async () => {
-    const tables = await pg.manyOrNone(
-      `SELECT * FROM information_schema.tables WHERE table_schema = 'public'`,
-    );
+    const tables = await informationSchema.tables.all();
     return tables;
   }),
-  getTableContents: t.procedure.input(z.object({ name: z.string() })).query(async ({ input }) => {
-    const pgColumns = await pg.many<PostgresColumn>(
-      `
-      SELECT * FROM information_schema.columns
-      WHERE table_schema = 'public'
-      AND table_name = $1
-      `,
-      [input.name],
-    );
-    console.log(pgColumns);
 
-    const rows = await pg.manyOrNone<Row>(
-      `
-      SELECT *
-      FROM ${new helpers.TableName(input.name)}
-      LIMIT 200
-      `,
-    );
+  getTableContents: t.procedure
+    .input(z.object({ tableName: z.string() }))
+    .query(async ({ input }) => {
+      const pgColumns = await informationSchema.columns.byTableName(input.tableName);
+      const rows = await arbitraryRows.byTableName(input.tableName);
+      return {
+        columns: pgColumns.map(columnFromPostgresColumn),
+        rows,
+      };
+    }),
 
-    return {
-      columns: pgColumns.map(columnFromPostgresColumn),
-      rows,
-    };
-  }),
+  getMutationsPreview: t.procedure
+    .input(
+      z.object({
+        tableName: z.string(),
+        inserts: z.array(z.record(z.string())),
+        updates: z.record(z.coerce.number(), z.record(z.string())),
+      }),
+    )
+    .query(async ({ input }) => {
+      const primaryKey = 'id'; // TODO: dynamic
+      const columns = await informationSchema.columns.byTableName(input.tableName);
+
+      const columnSet = new helpers.ColumnSet(
+        columns.map((column) => column.column_name),
+        { table: input.tableName },
+      );
+
+      let insertQueries;
+      if (input.inserts.length) {
+        insertQueries = helpers.insert(input.inserts, columnSet);
+      }
+
+      const updateQueries = helpers.update(
+        Object.entries(input.updates).map(([key, values]) => ({ id: key, ...values })),
+        columnSet,
+      );
+      console.log(updateQueries);
+
+      return {
+        insertQueries,
+        updateQueries,
+      };
+    }),
 });
 
 export type AppRouter = typeof router;
