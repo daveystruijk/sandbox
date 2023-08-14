@@ -1,4 +1,4 @@
-import { parseInt } from 'lodash';
+import dayjs from 'dayjs';
 
 import { Column, DataType } from '@sandbox/admin-panel-backend/src/router';
 
@@ -9,18 +9,9 @@ export const inputStringFromValue = (value: unknown, column: Column) => {
 
   const mapping: Record<DataType, (v: unknown) => string> = {
     varchar: (v) => v.toString(),
-    timestamp: (v: Date) =>
-      v
-        .toLocaleString('sv-SE', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        })
-        .replace(' ', 'T'),
-    boolean: (v) => '',
+    timestamp: (v: Date) => v.toISOString(),
+    timestamptz: (v: Date) => v.toISOString(),
+    boolean: (v) => v.toString(),
     int4: (v) => v.toString(),
     json: (v) => (v ? JSON.stringify(v) : ''),
   };
@@ -41,10 +32,19 @@ export const valueFromInputString = (inputString: string, column: Column) => {
   const mapping: Record<DataType, (s: string) => unknown> = {
     varchar: (s) => s,
     timestamp: (s) => new Date(s),
-    boolean: (s) => s,
+    timestamptz: (s) => new Date(s),
+    boolean: (s) => {
+      if (s !== 'true' && s !== 'false') {
+        throw new Error('Not a boolean');
+      }
+      return s === 'true';
+    },
     int4: (s) => {
-      // TODO: strip chars
-      return parseInt(s);
+      const result = Number(s);
+      if (isNaN(result)) {
+        throw new Error('IsNaN');
+      }
+      return result;
     },
     json: (s) => JSON.parse(s),
   };

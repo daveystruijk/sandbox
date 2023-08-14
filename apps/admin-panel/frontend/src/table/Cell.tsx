@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal } from 'solid-js';
+import { Component, createEffect, createMemo, createSignal } from 'solid-js';
 
 import { Column } from '@sandbox/admin-panel-backend/src/router';
 
@@ -20,29 +20,36 @@ export const Cell: Component<{
   const hasChanges = createMemo(() => value() !== props.initialValue);
 
   const onInput = () => {
-    setValue(valueFromInputString(inputRef.value, props.column));
-    if (hasChanges()) {
-      props.setMutation(props.rowId, props.column.name, inputRef.value);
-    } else {
+    try {
+      const newValue = valueFromInputString(inputRef.value, props.column);
+      setValue(newValue);
+      if (hasChanges()) {
+        props.setMutation(props.rowId, props.column.name, inputRef.value);
+      } else {
+        props.unsetMutation(props.rowId, props.column.name);
+      }
+      inputRef.setCustomValidity('');
+    } catch (e) {
       props.unsetMutation(props.rowId, props.column.name);
+      inputRef.setCustomValidity(e.message);
+      inputRef.reportValidity();
     }
   };
 
   const extraProps = {
     varchar: { type: 'text' },
-    timestamp: { type: 'datetime-local' },
+    timestamp: { type: 'text' },
     integer: { type: 'text', inputmode: 'numeric' },
     boolean: { type: 'checkbox', checked: value() },
   };
 
   return (
     <td
-      class="hover:cursor-text"
       classList={{
+        'hover:cursor-pointer': !props.column.isDisabled,
         'hover:cursor-not-allowed': props.column.isDisabled,
       }}
       onClick={() => {
-        setEditing(true);
         inputRef.focus();
       }}
     >
@@ -55,6 +62,14 @@ export const Cell: Component<{
           'pointer-events-none': !editing(),
         }}
         disabled={props.column.isDisabled}
+        onFocus={() => {
+          setEditing(true);
+          if (props.column.dataType === 'timestamp') {
+            inputRef.showPicker();
+          } else {
+            inputRef.reportValidity();
+          }
+        }}
         onBlur={() => {
           setEditing(false);
         }}

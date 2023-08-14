@@ -5,6 +5,7 @@ import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { client } from '../trpc';
 import { TableContents } from './TableContents';
+import { columnWidth } from './calculations';
 
 export const TablePage: Component = () => {
   const params = useParams<{ name: string }>();
@@ -12,7 +13,14 @@ export const TablePage: Component = () => {
   const [contents] = createResource(
     () => [params.name] as const,
     async ([name]) => {
-      return client.getTableContents.query({ name });
+      const result = await client.getTableContents.query({ name });
+      return {
+        columns: result.columns.map((column) => ({
+          ...column,
+          width: columnWidth(result.rows, column),
+        })),
+        rows: result.rows,
+      };
     },
   );
 

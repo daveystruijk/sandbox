@@ -6,7 +6,6 @@ import { Column, Row } from '@sandbox/admin-panel-backend/src/router';
 
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Cell } from './Cell';
-import { columnWidth } from './calculations';
 
 export const TableContents: Component<{ contents: { columns: Column[]; rows: Row[] } }> = (
   props,
@@ -38,14 +37,13 @@ export const TableContents: Component<{ contents: { columns: Column[]; rows: Row
             <thead class="sticky top-0">
               <tr class="px-2">
                 <For each={props.contents.columns}>
-                  {(column, i) => {
-                    const size = columnWidth(props.contents.rows, column);
+                  {(column) => {
                     return (
                       <th
                         class="text-left text-xs"
                         style={{
-                          width: `${Math.max(size, 40)}px`,
-                          'min-width': `${clamp(size, 40, 200)}px`,
+                          width: `${Math.max(column.width, 40)}px`,
+                          'min-width': `${clamp(column.width, 40, 200)}px`,
                         }}
                       >
                         <div class="flex flex-col gap-1 px-1 py-1">

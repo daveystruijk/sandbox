@@ -41,11 +41,9 @@ input:hover {
 
 input:focus {
   @apply outline outline-slate-400 bg-white;
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
 }
 
-td:has(input:focus) {
-  position: relative;
+input:invalid {
+  @apply outline-1 outline-dotted outline-red-400 bg-white;
 }

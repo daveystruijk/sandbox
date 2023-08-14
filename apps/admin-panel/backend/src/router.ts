@@ -3,7 +3,13 @@ import { z } from 'zod';
 import { helpers, pg } from './postgres';
 import { t } from './trpc';
 
-export type PostgresUnderlyingDataType = 'boolean' | 'int4' | 'varchar' | 'timestamp' | 'json';
+export type PostgresUnderlyingDataType =
+  | 'boolean'
+  | 'int4'
+  | 'varchar'
+  | 'timestamp'
+  | 'timestamptz'
+  | 'json';
 
 export type PostgresColumn = {
   column_name: string;
@@ -19,6 +25,7 @@ export type Column = {
   dataType: DataType;
   isDisabled: boolean;
   isNullable: boolean;
+  width?: number;
 };
 
 export type Row = Record<string, unknown>;
@@ -26,7 +33,10 @@ export type Row = Record<string, unknown>;
 const columnFromPostgresColumn = (pgColumn: PostgresColumn): Column => ({
   name: pgColumn.column_name,
   dataType: pgColumn.udt_name,
-  isDisabled: pgColumn.column_name === 'id',
+  isDisabled:
+    pgColumn.column_name === 'id' ||
+    pgColumn.udt_name === 'timestamp' ||
+    pgColumn.udt_name === 'timestamptz',
   isNullable: pgColumn.is_nullable,
 });
 
