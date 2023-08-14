@@ -68,15 +68,13 @@ export const TableContents: Component<{ contents: { columns: Column[]; rows: Row
                     <tr>
                       <For each={Object.entries(row)}>
                         {([key, value]) => (
-                          <td>
-                            <Cell
-                              rowId={row[primaryKey] as number}
-                              initialValue={value}
-                              column={columnsByName()[key]}
-                              setMutation={setMutation}
-                              unsetMutation={unsetMutation}
-                            />
-                          </td>
+                          <Cell
+                            rowId={row[primaryKey] as number}
+                            initialValue={value}
+                            column={columnsByName()[key]}
+                            setMutation={setMutation}
+                            unsetMutation={unsetMutation}
+                          />
                         )}
                       </For>
                     </tr>

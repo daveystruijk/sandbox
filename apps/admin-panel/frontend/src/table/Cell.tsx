@@ -36,31 +36,39 @@ export const Cell: Component<{
   };
 
   return (
-    <input
-      ref={inputRef}
-      value={inputStringFromValue(value(), props.column)}
-      onInput={onInput}
+    <td
+      class="hover:cursor-text"
       classList={{
         'hover:cursor-not-allowed': props.column.isDisabled,
-        'bg-orange-100': hasChanges(),
       }}
-      disabled={props.column.isDisabled}
-      onFocus={() => {
+      onClick={() => {
         setEditing(true);
+        inputRef.focus();
       }}
-      onBlur={() => {
-        setEditing(false);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          inputRef.blur();
-        }
-        if (e.key === 'Enter') {
-          inputRef.blur();
-        }
-      }}
-      placeholder={value() === null ? 'NULL' : undefined}
-      {...extraProps[props.column.dataType]}
-    />
+    >
+      <input
+        ref={inputRef}
+        value={inputStringFromValue(value(), props.column)}
+        onInput={onInput}
+        classList={{
+          'bg-orange-100': hasChanges(),
+          'pointer-events-none': !editing(),
+        }}
+        disabled={props.column.isDisabled}
+        onBlur={() => {
+          setEditing(false);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            inputRef.blur();
+          }
+          if (e.key === 'Enter') {
+            inputRef.blur();
+          }
+        }}
+        placeholder={value() === null ? 'NULL' : undefined}
+        {...extraProps[props.column.dataType]}
+      />
+    </td>
   );
 };
