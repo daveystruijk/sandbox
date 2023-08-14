@@ -46,7 +46,7 @@ export const Cell: Component<{
   return (
     <td
       classList={{
-        'hover:cursor-pointer': !props.column.isDisabled,
+        'hover:cursor-text': !props.column.isDisabled,
         'hover:cursor-not-allowed': props.column.isDisabled,
       }}
       onClick={() => {

@@ -14,8 +14,8 @@ export type PostgresUnderlyingDataType =
 export type PostgresColumn = {
   column_name: string;
   udt_name: PostgresUnderlyingDataType;
-  is_nullable: boolean;
-  is_updateable: boolean; // false for views
+  is_nullable: string;
+  is_updatable: string; // 'NO' for views
 };
 
 export type DataType = PostgresUnderlyingDataType;
@@ -37,7 +37,7 @@ const columnFromPostgresColumn = (pgColumn: PostgresColumn): Column => ({
     pgColumn.column_name === 'id' ||
     pgColumn.udt_name === 'timestamp' ||
     pgColumn.udt_name === 'timestamptz',
-  isNullable: pgColumn.is_nullable,
+  isNullable: pgColumn.is_nullable === 'YES',
 });
 
 export const router = t.router({
@@ -56,6 +56,7 @@ export const router = t.router({
       `,
       [input.name],
     );
+    console.log(pgColumns);
 
     const rows = await pg.manyOrNone<Row>(
       `
