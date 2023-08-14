@@ -1,38 +1,33 @@
 import { clamp, isEmpty, keyBy } from 'lodash';
-import { Component, ErrorBoundary, For, Show, createMemo, createSignal } from 'solid-js';
+import { Component, ErrorBoundary, For, Show, createEffect, createMemo } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
-import { Column, Entry } from '@sandbox/admin-panel-backend/src/router';
+import { Column, Row } from '@sandbox/admin-panel-backend/src/router';
 
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Cell } from './Cell';
 import { columnWidth } from './calculations';
 
-export const TableContents: Component<{ contents: { columns: Column[]; entries: Entry[] } }> = (
+export const TableContents: Component<{ contents: { columns: Column[]; rows: Row[] } }> = (
   props,
 ) => {
-  const [mutations, setMutations] = createSignal({});
+  const [mutations, setMutations] = createStore<Record<number, Row>>({});
   const primaryKey = 'id'; // TODO: dynamic?
-  const columnsByName = createMemo(() => keyBy(props.contents.columns, 'column_name'));
+  const columnsByName = createMemo(() => keyBy(props.contents.columns, 'name'));
 
-  const setMutation = (rowId: number, key: string, value: unknown) => {
-    console.log(mutations());
-    setMutations((mutations) => ({
-      ...mutations,
-      [rowId]: {
-        ...mutations[rowId],
-        [key]: value,
-      },
-    }));
+  const setMutation = (rowId: number, columnName: string, value: unknown) => {
+    setMutations(rowId, {});
+    setMutations(rowId, columnName, value);
   };
 
-  const unsetMutation = (rowId: number, key: string) => {
-    console.log(mutations());
-    const m = { ...mutations() };
-    delete m[rowId][key];
-    if (isEmpty(m[rowId])) {
-      delete m[rowId];
+  const unsetMutation = (rowId: number, columnName: string) => {
+    if (!(rowId in mutations)) {
+      return;
     }
-    setMutations(m);
+    setMutations(rowId, columnName, undefined);
+    if (isEmpty(mutations[rowId])) {
+      setMutations(rowId, undefined);
+    }
   };
 
   return (
@@ -44,7 +39,7 @@ export const TableContents: Component<{ contents: { columns: Column[]; entries: 
               <tr class="px-2">
                 <For each={props.contents.columns}>
                   {(column, i) => {
-                    const size = columnWidth(props.contents.entries, column);
+                    const size = columnWidth(props.contents.rows, column);
                     return (
                       <th
                         class="text-left text-xs"
@@ -55,7 +50,7 @@ export const TableContents: Component<{ contents: { columns: Column[]; entries: 
                         }}
                       >
                         <div class="flex flex-col gap-1 px-1 py-1">
-                          <span class="text-slate-600">{column.column_name}</span>
+                          <span class="text-slate-600">{column.name}</span>
                           {/*<span class="text-slate-300">{props.column.data_type}</span>*/}
                         </div>
                       </th>
@@ -65,7 +60,7 @@ export const TableContents: Component<{ contents: { columns: Column[]; entries: 
               </tr>
             </thead>
             <tbody>
-              <For each={props.contents.entries}>
+              <For each={props.contents.rows}>
                 {(row) => {
                   return (
                     <tr>
@@ -74,8 +69,7 @@ export const TableContents: Component<{ contents: { columns: Column[]; entries: 
                           <td>
                             <Cell
                               rowId={row[primaryKey] as number}
-                              key={key}
-                              value={value}
+                              initialValue={value}
                               column={columnsByName()[key]}
                               setMutation={setMutation}
                               unsetMutation={unsetMutation}
@@ -91,10 +85,11 @@ export const TableContents: Component<{ contents: { columns: Column[]; entries: 
           </table>
         </ErrorBoundary>
       </div>
-      <Show when={Object.keys(mutations()).length}>
+      <Show when={Object.keys(mutations).length}>
         <div class="flex h-16 bg-white p-2">
           <div class="flex grow"></div>
-          <div class="flex w-12 bg-green-100">{Object.keys(mutations()).length} rows changed</div>
+          <div class="flex self-center">{Object.keys(mutations).length} rows changed</div>
+          <div class="flex w-12 bg-green-100">{Object.keys(mutations).length} rows changed</div>
         </div>
       </Show>
     </div>

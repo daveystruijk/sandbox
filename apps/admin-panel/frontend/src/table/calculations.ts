@@ -1,15 +1,15 @@
 import { max } from 'lodash';
 
-import { Column, Entry } from '@sandbox/admin-panel-backend/src/router';
+import { Column, Row } from '@sandbox/admin-panel-backend/src/router';
 
-import { valueToInputString } from './transformations';
+import { inputStringFromValue } from './transformations';
 
 const stringLengthToWidthFactor = 8;
 
-export const columnWidth = (entries: Entry[], column: Column) => {
-  const stringLengths = entries
-    .map((row) => row[column.column_name])
-    .map((value) => valueToInputString(value, column.data_type))
+export const columnWidth = (rows: Row[], column: Column) => {
+  const stringLengths = rows
+    .map((row) => row[column.name])
+    .map((value) => inputStringFromValue(value, column.dataType) || '')
     .map((s: string) => s.length);
   const fittingWidth = 20 + max(stringLengths) * stringLengthToWidthFactor;
   return fittingWidth;

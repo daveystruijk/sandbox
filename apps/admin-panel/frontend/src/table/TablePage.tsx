@@ -1,5 +1,5 @@
 import { useParams } from '@solidjs/router';
-import { Component, Match, Show, Switch, createResource } from 'solid-js';
+import { Component, Match, Switch, createResource } from 'solid-js';
 
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';

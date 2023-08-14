@@ -1,73 +1,57 @@
-import { Component, createSignal } from 'solid-js';
+import { Component, createMemo, createSignal } from 'solid-js';
 
 import { Column } from '@sandbox/admin-panel-backend/src/router';
 
-import { valueToInputString } from './transformations';
-
-const attributes = (props) => {
-  const byDataType = {
-    'character varying': { type: 'text' },
-    'timestamp without time zone': { type: 'datetime-local' },
-    integer: { type: 'text', inputmode: 'numeric' },
-    boolean: { type: 'checkbox', checked: props.value },
-  };
-
-  return byDataType[props.column.data_type];
-};
+import { inputStringFromValue, valueFromInputString } from './transformations';
 
 export const Cell: Component<{
   rowId: number;
-  key: string;
-  value: unknown;
   column: Column;
+  initialValue: unknown;
   setMutation: (rowId: number, key: string, value: unknown) => void;
   unsetMutation: (rowId: number, key: string) => void;
 }> = (props) => {
   let inputRef: HTMLInputElement;
 
-  const [editing, setEditing] = createSignal(false);
-  const [pendingChange, setPendingChange] = createSignal(undefined);
+  const [value, setValue] = createSignal(props.initialValue);
 
-  const value = pendingChange()
-    ? pendingChange()
-    : valueToInputString(props.value, props.column.data_type);
+  const hasChanges = createMemo(() => value() !== props.initialValue);
 
-  const onEnter = () => {
-    setEditing(true);
+  const onInput = () => {
+    setValue(valueFromInputString(inputRef.value, props.column.dataType));
+    if (hasChanges()) {
+      props.setMutation(props.rowId, props.column.name, inputRef.value);
+    } else {
+      props.unsetMutation(props.rowId, props.column.name);
+    }
   };
 
-  const onExit = () => {
-    inputRef.blur();
-    setEditing(false);
-    if (inputRef.value === props.value) {
-      setPendingChange(undefined);
-      props.unsetMutation(props.rowId, props.key);
-    } else {
-      setPendingChange(inputRef.value);
-      props.setMutation(props.rowId, props.key, inputRef.value);
-    }
+  const extraProps = {
+    varchar: { type: 'text' },
+    timestamp: { type: 'datetime-local' },
+    integer: { type: 'text', inputmode: 'numeric' },
+    boolean: { type: 'checkbox', checked: value() },
   };
 
   return (
     <input
       ref={inputRef}
-      value={value}
-      onFocus={onEnter}
-      onBlur={onExit}
+      value={inputStringFromValue(value(), props.column.dataType)}
+      onInput={onInput}
       classList={{
-        'hover:cursor-not-allowed': props.column.is_disabled,
-        'bg-orange-200': pendingChange() !== undefined,
+        'hover:cursor-not-allowed': props.column.isDisabled,
+        'bg-orange-100': hasChanges(),
       }}
-      disabled={props.column.is_disabled}
+      disabled={props.column.isDisabled}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
-          onExit();
+          inputRef.blur();
         }
         if (e.key === 'Enter') {
-          onExit();
+          inputRef.blur();
         }
       }}
-      {...attributes(props)}
+      {...extraProps[props.column.dataType]}
     />
   );
 };

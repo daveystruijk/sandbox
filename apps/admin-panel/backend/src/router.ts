@@ -3,14 +3,32 @@ import { z } from 'zod';
 import { helpers, pg } from './postgres';
 import { t } from './trpc';
 
-export type Column = {
+export type PostgresUnderlyingDataType = 'boolean' | 'int4' | 'varchar' | 'timestamp' | 'json';
+
+export type PostgresColumn = {
   column_name: string;
+  udt_name: PostgresUnderlyingDataType;
   is_nullable: boolean;
-  data_type: string;
-  is_disabled: boolean;
+  is_updateable: boolean; // false for views
 };
 
-export type Entry = Record<string, unknown>;
+export type DataType = PostgresUnderlyingDataType;
+
+export type Column = {
+  name: string;
+  dataType: DataType;
+  isDisabled: boolean;
+  isNullable: boolean;
+};
+
+export type Row = Record<string, unknown>;
+
+const columnFromPostgresColumn = (pgColumn: PostgresColumn): Column => ({
+  name: pgColumn.column_name,
+  dataType: pgColumn.udt_name,
+  isDisabled: pgColumn.column_name === 'id',
+  isNullable: pgColumn.is_nullable,
+});
 
 export const router = t.router({
   getTables: t.procedure.query(async () => {
@@ -20,19 +38,26 @@ export const router = t.router({
     return tables;
   }),
   getTableContents: t.procedure.input(z.object({ name: z.string() })).query(async ({ input }) => {
-    const columns = await pg.many<Column>(
-      `SELECT * FROM information_schema.columns WHERE table_schema = 'public' and table_name = $1`,
+    const pgColumns = await pg.many<PostgresColumn>(
+      `
+      SELECT * FROM information_schema.columns
+      WHERE table_schema = 'public'
+      AND table_name = $1
+      `,
       [input.name],
     );
-    const entries = await pg.manyOrNone<Entry>(
-      `SELECT * FROM ${new helpers.TableName(input.name)} LIMIT 200`,
+
+    const rows = await pg.manyOrNone<Row>(
+      `
+      SELECT *
+      FROM ${new helpers.TableName(input.name)}
+      LIMIT 200
+      `,
     );
+
     return {
-      columns: columns.map((column) => ({
-        ...column,
-        is_disabled: column.column_name === 'id',
-      })),
-      entries,
+      columns: pgColumns.map(columnFromPostgresColumn),
+      rows,
     };
   }),
 });

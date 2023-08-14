@@ -44,5 +44,6 @@ input:hover {
 }
 
 input:focus {
-  @apply outline outline-slate-400 bg-white;
+  @apply outline outline-slate-400;
+  position: relative;
 }
