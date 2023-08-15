@@ -4,6 +4,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
+    "lint": "eslint .",
     "test": "vitest"
   },
   "devDependencies": {

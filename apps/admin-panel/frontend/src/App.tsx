@@ -1,5 +1,5 @@
 import { A, Route, Router, Routes } from '@solidjs/router';
-import { Component, ErrorBoundary, For, Suspense, createResource, createSignal } from 'solid-js';
+import { Component, ErrorBoundary, For, Suspense, createResource } from 'solid-js';
 
 import { ErrorMessage } from './components/ErrorMessage';
 import { Spinner } from './components/Spinner';
@@ -7,7 +7,7 @@ import { TablePage } from './table/TablePage';
 import { client } from './trpc';
 
 const Sidebar: Component = () => {
-  const [open, setOpen] = createSignal(false);
+  // const [open, setOpen] = createSignal(false);
 
   return <div class="flex flex-col align-items-center w-12 shrink-0"></div>;
 };

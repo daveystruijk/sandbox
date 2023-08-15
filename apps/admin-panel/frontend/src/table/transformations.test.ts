@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 
-import { Column, DataType } from '@sandbox/admin-panel-backend/src/router';
+import { Column } from '@sandbox/admin-panel-backend/src/router';
 
 import { inputStringFromValue, valueFromInputString } from './transformations';
 

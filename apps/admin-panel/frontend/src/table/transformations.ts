@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 import { Column, DataType } from '@sandbox/admin-panel-backend/src/router';
 
 export const inputStringFromValue = (value: unknown, column: Column) => {
@@ -28,6 +26,8 @@ export const valueFromInputString = (inputString: string, column: Column) => {
   if (inputString === '' && column.isNullable) {
     return null;
   }
+
+  const _xyz = '';
 
   const mapping: Record<DataType, (s: string) => unknown> = {
     varchar: (s) => s,

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { helpers, pg } from './postgres';
+import { helpers } from './postgres';
 import {
   PostgresColumn,
   PostgresUnderlyingDataType,
@@ -57,7 +57,6 @@ export const router = t.router({
       }),
     )
     .query(async ({ input }) => {
-      const primaryKey = 'id'; // TODO: dynamic
       const columns = await informationSchema.columns.byTableName(input.tableName);
 
       const columnSet = new helpers.ColumnSet(
