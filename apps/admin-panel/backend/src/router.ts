@@ -57,6 +57,7 @@ export const router = t.router({
       }),
     )
     .query(async ({ input }) => {
+      return;
       const columns = await informationSchema.columns.byTableName(input.tableName);
 
       const columnSet = new helpers.ColumnSet(

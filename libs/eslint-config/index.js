@@ -24,5 +24,8 @@ module.exports = {
 
     // Warn instead of error because this trips up nativescript's references.d.ts
     '@typescript-eslint/triple-slash-reference': 'warn',
+
+    // Non-null assertions are usually solidjs workarounds
+    '@typescript-eslint/no-non-null-assertion': 'off',
   },
 };

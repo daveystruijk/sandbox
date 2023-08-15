@@ -1,7 +1,7 @@
 import { helpers, pg } from './postgres';
 
 export type PostgresUnderlyingDataType =
-  | 'boolean'
+  | 'bool'
   | 'int4'
   | 'varchar'
   | 'timestamp'

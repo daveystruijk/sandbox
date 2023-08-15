@@ -33,7 +33,7 @@ export const TablePage: Component = () => {
         <Spinner />
       </Match>
       <Match when={contents()}>
-        <TableContents tableName={params.tableName} contents={contents()} />
+        {(c) => <TableContents tableName={params.tableName} contents={c()} />}
       </Match>
     </Switch>
   );

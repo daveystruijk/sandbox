@@ -1,6 +1,6 @@
 import { Component, createMemo, createSignal } from 'solid-js';
 
-import { Column } from '@sandbox/admin-panel-backend/src/router';
+import { Column, DataType } from '@sandbox/admin-panel-backend/src/router';
 
 import { inputStringFromValue, valueFromInputString } from './transformations';
 
@@ -21,6 +21,8 @@ export const Cell: Component<{
   const onInput = () => {
     try {
       const newValue = valueFromInputString(inputRef.value, props.column);
+      console.log(value());
+      console.log(newValue);
       setValue(newValue);
       if (hasChanges()) {
         props.setMutation(props.rowId, props.column.name, inputRef.value);
@@ -30,16 +32,18 @@ export const Cell: Component<{
       inputRef.setCustomValidity('');
     } catch (e) {
       props.unsetMutation(props.rowId, props.column.name);
-      inputRef.setCustomValidity(e.message);
+      inputRef.setCustomValidity((e as Error).message);
       inputRef.reportValidity();
     }
   };
 
-  const extraProps = {
+  const extraProps: Record<DataType, Record<string, unknown>> = {
     varchar: { type: 'text' },
     timestamp: { type: 'text' },
-    integer: { type: 'text', inputmode: 'numeric' },
-    boolean: { type: 'checkbox', checked: value() },
+    timestamptz: { type: 'text' },
+    json: { type: 'text' },
+    bool: { type: 'checkbox', checked: value() === true, value: null },
+    int4: { type: 'text' },
   };
 
   return (
@@ -53,12 +57,12 @@ export const Cell: Component<{
       }}
     >
       <input
-        ref={inputRef}
+        ref={inputRef!}
         value={inputStringFromValue(value(), props.column)}
         onInput={onInput}
         classList={{
           'bg-orange-100': hasChanges(),
-          'pointer-events-none': !editing(),
+          'pointer-events-none': props.column.dataType === 'bool' ? false : !editing(),
         }}
         disabled={props.column.isDisabled}
         onFocus={() => {

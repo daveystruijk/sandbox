@@ -1,11 +1,10 @@
 import { clamp, isEmpty, keyBy } from 'lodash';
 import { Component, ErrorBoundary, For, Show, createMemo } from 'solid-js';
-import { createStore, unwrap } from 'solid-js/store';
+import { createStore } from 'solid-js/store';
 
 import { Column, Row } from '@sandbox/admin-panel-backend/src/router';
 
 import { ErrorMessage } from '../components/ErrorMessage';
-import { client } from '../trpc';
 import { Cell } from './Cell';
 
 export const TableContents: Component<{
@@ -29,14 +28,6 @@ export const TableContents: Component<{
     if (isEmpty(mutations[rowId])) {
       setMutations(rowId, undefined);
     }
-  };
-
-  const commitMutations = () => {
-    client.getMutationsPreview.query({
-      tableName: props.tableName,
-      updates: unwrap(mutations),
-      inserts: [],
-    });
   };
 
   return (
