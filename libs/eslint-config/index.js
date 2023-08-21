@@ -9,9 +9,9 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
 
   rules: {
-    // Error on unused vars, but not if they have a leading underscore
+    // Warn on unused vars, but not if they have a leading underscore
     '@typescript-eslint/no-unused-vars': [
-      'error',
+      'warn',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
