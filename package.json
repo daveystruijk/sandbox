@@ -10,6 +10,7 @@
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
+    "@pnpm/workspace.find-packages": "^1.0.5",
     "@sandbox/eslint-config": "workspace:^",
     "@sandbox/prettier-config": "workspace:^",
     "@sandbox/tsconfig": "workspace:^",
@@ -20,6 +21,7 @@
     "lint-staged": "^14.0.0",
     "prettier": "^3.0.2",
     "prettier-plugin-tailwindcss": "^0.5.3",
+    "tsx": "^3.12.7",
     "typescript": "^5.1.6"
   },
   "prettier": "@sandbox/prettier-config",
