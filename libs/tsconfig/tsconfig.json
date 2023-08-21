@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "lib": ["DOM", "ESNext"],
+
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  }
+  // frontend mobile
+
+  // frontend web
+}

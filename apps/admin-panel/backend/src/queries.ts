@@ -8,6 +8,10 @@ export type PostgresUnderlyingDataType =
   | 'timestamptz'
   | 'json';
 
+export type PostgresTable = {
+  table_name: string;
+};
+
 export type PostgresColumn = {
   column_name: string;
   udt_name: PostgresUnderlyingDataType;
@@ -18,7 +22,7 @@ export type PostgresColumn = {
 export const informationSchema = {
   tables: {
     all: async () =>
-      pg.manyOrNone(
+      pg.manyOrNone<PostgresTable>(
         `
         SELECT *
         FROM information_schema.tables
@@ -45,7 +49,7 @@ export const arbitraryRows = {
     pg.manyOrNone(
       `
       SELECT *
-      FROM ${new helpers.TableName(tableName)}
+      FROM ${new helpers.TableName(tableName).toString()}
       LIMIT $1
       `,
       [limit],

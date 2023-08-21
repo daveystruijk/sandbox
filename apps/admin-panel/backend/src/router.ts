@@ -1,11 +1,10 @@
 import { z } from 'zod';
-
 import { helpers } from './postgres';
 import {
-  PostgresColumn,
-  PostgresUnderlyingDataType,
   arbitraryRows,
   informationSchema,
+  PostgresColumn,
+  PostgresUnderlyingDataType,
 } from './queries';
 import { t } from './trpc';
 
@@ -43,7 +42,7 @@ export const router = t.router({
       const pgColumns = await informationSchema.columns.byTableName(input.tableName);
       const rows = await arbitraryRows.byTableName(input.tableName);
       return {
-        columns: pgColumns.map(columnFromPostgresColumn),
+        columns: pgColumns.map((column) => columnFromPostgresColumn(column)),
         rows,
       };
     }),
@@ -57,7 +56,6 @@ export const router = t.router({
       }),
     )
     .query(async ({ input }) => {
-      return;
       const columns = await informationSchema.columns.byTableName(input.tableName);
 
       const columnSet = new helpers.ColumnSet(
@@ -65,20 +63,18 @@ export const router = t.router({
         { table: input.tableName },
       );
 
-      let insertQueries;
-      if (input.inserts.length) {
-        insertQueries = helpers.insert(input.inserts, columnSet);
-      }
+      const insertQueries =
+        input.inserts.length > 0 ? helpers.insert(input.inserts, columnSet) : undefined;
 
-      const updateQueries = helpers.update(
-        Object.entries(input.updates).map(([key, values]) => ({ id: key, ...values })),
-        columnSet,
-      );
-      console.log(updateQueries);
+      // const updateQueries = helpers.update(
+      //   Object.entries(input.updates).map(([key, values]) => ({ id: key, ...values })),
+      //   columnSet,
+      // );
+      // console.log(updateQueries);
 
       return {
         insertQueries,
-        updateQueries,
+        // updateQueries,
       };
     }),
 });

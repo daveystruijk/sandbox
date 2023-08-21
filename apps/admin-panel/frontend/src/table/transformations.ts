@@ -36,7 +36,7 @@ export const valueFromInputString = (inputString: string, column: Column) => {
     },
     int4: (s) => {
       const result = Number(s);
-      if (isNaN(result)) {
+      if (Number.isNaN(result)) {
         throw new Error('IsNaN');
       }
       return result;

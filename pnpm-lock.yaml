@@ -22,6 +22,9 @@ importers:
       '@sandbox/prettier-config':
         specifier: workspace:^
         version: link:libs/prettier-config
+      '@sandbox/tsconfig':
+        specifier: workspace:^
+        version: link:libs/tsconfig
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.4.0
         version: 6.4.0(@typescript-eslint/parser@6.4.0)(eslint@8.47.0)(typescript@5.1.6)
@@ -252,6 +255,8 @@ importers:
   libs/frontend-components: {}
 
   libs/prettier-config: {}
+
+  libs/tsconfig: {}
 
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:

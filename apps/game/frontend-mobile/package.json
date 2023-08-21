@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "dev:android": "tns run android",
-    "dev:ios": "tns run ios"
+    "dev:ios": "tns run ios",
+    "build": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@nativescript-community/solid-js": "0.0.4-alpha.4",
@@ -24,5 +26,9 @@
     "@nativescript/types": "^8.5.0",
     "@nativescript/webpack": "^5.0.17",
     "typescript": "^5.1.6"
-  }
+  },
+  "eslintIgnore": [
+    "platforms",
+    "hooks"
+  ]
 }

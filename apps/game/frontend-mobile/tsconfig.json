@@ -1,19 +1,13 @@
 {
+  "extends": "@sandbox/tsconfig",
   "compilerOptions": {
-    "module": "esnext",
-    "target": "ES2020",
-    "moduleResolution": "node",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noEmitHelpers": true,
     "noEmitOnError": true,
-    "skipLibCheck": true,
-    "lib": ["ESNext", "dom"],
     "baseUrl": "."
   },
-  "include": ["src/**/*"],
-  "files": ["./references.d.ts"],
-  "exclude": ["node_modules", "platforms"]
+  "exclude": ["node_modules", "platforms", "hooks"]
 }
