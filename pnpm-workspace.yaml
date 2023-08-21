@@ -1,5 +1,3 @@
 packages:
-  - 'libs/**'
-  - 'apps/**'
-  - 'scripts'
+  - 'packages/**'
   - 'infra'

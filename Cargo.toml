@@ -1,5 +1,5 @@
 [workspace]
 
 members = [
-    "apps/game/backend",
+    "packages/game/backend",
 ]
