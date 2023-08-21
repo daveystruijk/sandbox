@@ -5,8 +5,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noEmitHelpers": true,
-    "noEmitOnError": true,
-    "baseUrl": "."
+    "noEmitOnError": true
   },
   "exclude": ["node_modules", "platforms", "hooks"]
 }
