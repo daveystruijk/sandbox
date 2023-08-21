@@ -1,7 +1,12 @@
 import { Component } from 'solid-js';
+import { SharedComponent } from '@sandbox/game-frontend-components/src/SharedComponent';
 
 const App: Component = () => {
-  return <p class="py-20 text-center text-4xl text-green-700">Hello tailwind!</p>;
+  return (
+    <div>
+      <SharedComponent native={false} />
+    </div>
+  );
 };
 
 export default App;

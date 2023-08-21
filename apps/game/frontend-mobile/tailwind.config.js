@@ -2,7 +2,10 @@ const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{css,xml,html,ts,tsx}'],
+  content: [
+    './src/**/*.{css,xml,html,ts,tsx}',
+    './node_modules/@sandbox/game-frontend-components/**/*.{js,ts,jsx,tsx,css}',
+  ],
   theme: {
     extend: {},
   },
