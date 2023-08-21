@@ -1,73 +1,88 @@
-import { Component, createSignal } from 'solid-js';
+import { Component, createMemo, createSignal } from 'solid-js';
 
-import { Column } from '@sandbox/admin-panel-backend/src/router';
+import { Column, DataType } from '@sandbox/admin-panel-backend/src/router';
 
-import { valueToInputString } from './transformations';
-
-const attributes = (props) => {
-  const byDataType = {
-    'character varying': { type: 'text' },
-    'timestamp without time zone': { type: 'datetime-local' },
-    integer: { type: 'text', inputmode: 'numeric' },
-    boolean: { type: 'checkbox', checked: props.value },
-  };
-
-  return byDataType[props.column.data_type];
-};
+import { inputStringFromValue, valueFromInputString } from './transformations';
 
 export const Cell: Component<{
   rowId: number;
-  key: string;
-  value: unknown;
   column: Column;
+  initialValue: unknown;
   setMutation: (rowId: number, key: string, value: unknown) => void;
   unsetMutation: (rowId: number, key: string) => void;
 }> = (props) => {
   let inputRef: HTMLInputElement;
 
+  const [value, setValue] = createSignal(props.initialValue);
   const [editing, setEditing] = createSignal(false);
-  const [pendingChange, setPendingChange] = createSignal(undefined);
 
-  const value = pendingChange()
-    ? pendingChange()
-    : valueToInputString(props.value, props.column.data_type);
+  const hasChanges = createMemo(() => value() !== props.initialValue);
 
-  const onEnter = () => {
-    setEditing(true);
-  };
-
-  const onExit = () => {
-    inputRef.blur();
-    setEditing(false);
-    if (inputRef.value === props.value) {
-      setPendingChange(undefined);
-      props.unsetMutation(props.rowId, props.key);
-    } else {
-      setPendingChange(inputRef.value);
-      props.setMutation(props.rowId, props.key, inputRef.value);
+  const onInput = () => {
+    try {
+      const newValue = valueFromInputString(inputRef.value, props.column);
+      console.log(value());
+      console.log(newValue);
+      setValue(newValue);
+      if (hasChanges()) {
+        props.setMutation(props.rowId, props.column.name, inputRef.value);
+      } else {
+        props.unsetMutation(props.rowId, props.column.name);
+      }
+      inputRef.setCustomValidity('');
+    } catch (e) {
+      props.unsetMutation(props.rowId, props.column.name);
+      inputRef.setCustomValidity((e as Error).message);
+      inputRef.reportValidity();
     }
   };
 
+  const extraProps: Record<DataType, Record<string, unknown>> = {
+    varchar: { type: 'text' },
+    timestamp: { type: 'text' },
+    timestamptz: { type: 'text' },
+    json: { type: 'text' },
+    bool: { type: 'checkbox', checked: value() === true, value: null },
+    int4: { type: 'text' },
+  };
+
   return (
-    <input
-      ref={inputRef}
-      value={value}
-      onFocus={onEnter}
-      onBlur={onExit}
+    <td
       classList={{
-        'hover:cursor-not-allowed': props.column.is_disabled,
-        'bg-orange-200': pendingChange() !== undefined,
+        'hover:cursor-text': !props.column.isDisabled,
+        'hover:cursor-not-allowed': props.column.isDisabled,
       }}
-      disabled={props.column.is_disabled}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          onExit();
-        }
-        if (e.key === 'Enter') {
-          onExit();
-        }
+      onClick={() => {
+        inputRef.focus();
       }}
-      {...attributes(props)}
-    />
+    >
+      <input
+        ref={inputRef!}
+        value={inputStringFromValue(value(), props.column)}
+        onInput={onInput}
+        classList={{
+          'bg-orange-100': hasChanges(),
+          'pointer-events-none': props.column.dataType === 'bool' ? false : !editing(),
+        }}
+        disabled={props.column.isDisabled}
+        onFocus={() => {
+          setEditing(true);
+          inputRef.reportValidity();
+        }}
+        onBlur={() => {
+          setEditing(false);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            inputRef.blur();
+          }
+          if (e.key === 'Enter') {
+            inputRef.blur();
+          }
+        }}
+        placeholder={value() === null ? 'NULL' : undefined}
+        {...extraProps[props.column.dataType]}
+      />
+    </td>
   );
 };

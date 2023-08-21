@@ -2,7 +2,8 @@
   "name": "@sandbox/game-postgres-migrations",
   "type": "module",
   "scripts": {
-    "migrate": "tsx src/migrate.ts"
+    "migrate": "tsx src/migrate.ts",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@types/node": "^18.17.1",

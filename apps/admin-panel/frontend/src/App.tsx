@@ -6,6 +6,12 @@ import { Spinner } from './components/Spinner';
 import { TablePage } from './table/TablePage';
 import { client } from './trpc';
 
+const Sidebar: Component = () => {
+  // const [open, setOpen] = createSignal(false);
+
+  return <div class="flex flex-col align-items-center w-12 shrink-0"></div>;
+};
+
 const Root: Component = () => {
   const [tables] = createResource(async () => {
     return client.getTables.query();
@@ -43,10 +49,10 @@ const Root: Component = () => {
         </div>
         <div class="flex flex-col grow bg-white rounded-t shadow-md overflow-hidden">
           <Routes>
-            <Route path="/table/:name" component={TablePage} />
+            <Route path="/table/:tableName" component={TablePage} />
           </Routes>
         </div>
-        <div class="flex flex-col w-12 shrink-0"></div>
+        <Sidebar />
       </div>
     </div>
   );

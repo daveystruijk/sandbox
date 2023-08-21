@@ -1,18 +1,26 @@
 import { useParams } from '@solidjs/router';
-import { Component, Match, Show, Switch, createResource } from 'solid-js';
+import { Component, Match, Switch, createResource } from 'solid-js';
 
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { client } from '../trpc';
 import { TableContents } from './TableContents';
+import { columnWidth } from './calculations';
 
 export const TablePage: Component = () => {
-  const params = useParams<{ name: string }>();
+  const params = useParams<{ tableName: string }>();
 
   const [contents] = createResource(
-    () => [params.name] as const,
-    async ([name]) => {
-      return client.getTableContents.query({ name });
+    () => [params.tableName] as const,
+    async ([tableName]) => {
+      const result = await client.getTableContents.query({ tableName });
+      return {
+        columns: result.columns.map((column) => ({
+          ...column,
+          width: columnWidth(result.rows, column),
+        })),
+        rows: result.rows,
+      };
     },
   );
 
@@ -25,7 +33,7 @@ export const TablePage: Component = () => {
         <Spinner />
       </Match>
       <Match when={contents()}>
-        <TableContents contents={contents()} />
+        {(c) => <TableContents tableName={params.tableName} contents={c()} />}
       </Match>
     </Switch>
   );
