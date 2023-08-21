@@ -1,6 +1,6 @@
 export const ErrorMessage = () => {
   return (
-    <div role="alert" class="flex items-center justify-center h-full">
+    <div role="alert" class="flex h-full items-center justify-center">
       <span class="mr-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"

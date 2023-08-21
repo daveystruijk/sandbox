@@ -1,7 +1,5 @@
 import { Component, createMemo, createSignal } from 'solid-js';
-
 import { Column, DataType } from '@sandbox/admin-panel-backend/src/router';
-
 import { inputStringFromValue, valueFromInputString } from './transformations';
 
 export const Cell: Component<{

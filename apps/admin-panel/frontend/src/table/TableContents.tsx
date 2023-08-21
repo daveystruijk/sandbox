@@ -1,9 +1,7 @@
 import { clamp, isEmpty, keyBy } from 'lodash';
-import { Component, ErrorBoundary, For, Show, createMemo } from 'solid-js';
+import { Component, createMemo, ErrorBoundary, For, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
-
 import { Column, Row } from '@sandbox/admin-panel-backend/src/router';
-
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Cell } from './Cell';
 
@@ -31,8 +29,8 @@ export const TableContents: Component<{
   };
 
   return (
-    <div class="flex flex-col h-full">
-      <div class="relative overflow-x-auto h-full">
+    <div class="flex h-full flex-col">
+      <div class="relative h-full overflow-x-auto">
         <ErrorBoundary fallback={<ErrorMessage />}>
           <table class="">
             <thead class="sticky top-0">

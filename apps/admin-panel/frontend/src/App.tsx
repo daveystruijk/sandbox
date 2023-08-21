@@ -1,6 +1,5 @@
 import { A, Route, Router, Routes } from '@solidjs/router';
-import { Component, ErrorBoundary, For, Suspense, createResource } from 'solid-js';
-
+import { Component, createResource, ErrorBoundary, For, Suspense } from 'solid-js';
 import { ErrorMessage } from './components/ErrorMessage';
 import { Spinner } from './components/Spinner';
 import { TablePage } from './table/TablePage';
@@ -9,7 +8,7 @@ import { client } from './trpc';
 const Sidebar: Component = () => {
   // const [open, setOpen] = createSignal(false);
 
-  return <div class="flex flex-col align-items-center w-12 shrink-0"></div>;
+  return <div class="align-items-center flex w-12 shrink-0 flex-col"></div>;
 };
 
 const Root: Component = () => {
@@ -18,17 +17,17 @@ const Root: Component = () => {
   });
 
   return (
-    <div class="flex flex-col h-screen items-stretch">
-      <div class="flex flex-row h-12 shrink-0">
+    <div class="flex h-screen flex-col items-stretch">
+      <div class="flex h-12 shrink-0 flex-row">
         <div class="flex w-48">
           <A href="/">Logo</A>
         </div>
         <div class="flex grow"></div>
         <div class="flex w-12"></div>
       </div>
-      <div class="flex flex-row grow w-screen items-stretch overflow-hidden">
-        <div class="flex flex-col w-48 shrink-0">
-          <div class="py-1 px-3 text-xs text-slate-600 text-center font-semibold uppercase">
+      <div class="flex w-screen grow flex-row items-stretch overflow-hidden">
+        <div class="flex w-48 shrink-0 flex-col">
+          <div class="px-3 py-1 text-center text-xs font-semibold uppercase text-slate-600">
             Tables
           </div>
           <Suspense fallback={<Spinner />}>
@@ -38,7 +37,7 @@ const Root: Component = () => {
                   <A
                     href={`/table/${table.table_name}`}
                     end={true}
-                    class="hover:bg-slate-300 px-2 py-1 mx-2 rounded text-xs text-slate-900"
+                    class="mx-2 rounded px-2 py-1 text-xs text-slate-900 hover:bg-slate-300"
                   >
                     {table.table_name}
                   </A>
@@ -47,7 +46,7 @@ const Root: Component = () => {
             </ErrorBoundary>
           </Suspense>
         </div>
-        <div class="flex flex-col grow bg-white rounded-t shadow-md overflow-hidden">
+        <div class="flex grow flex-col overflow-hidden rounded-t bg-white shadow-md">
           <Routes>
             <Route path="/table/:tableName" component={TablePage} />
           </Routes>

@@ -1,7 +1,5 @@
 import { max } from 'lodash';
-
 import { Column, Row } from '@sandbox/admin-panel-backend/src/router';
-
 import { inputStringFromValue } from './transformations';
 
 const stringLengthToWidthFactor = 8;

@@ -1,5 +1,4 @@
 import PgPromise from 'pg-promise';
-
 import config from './config';
 
 const pgPromise = PgPromise();

@@ -2,10 +2,10 @@ import { Component } from 'solid-js';
 
 export const Spinner: Component = () => {
   return (
-    <div role="status" class="flex items-center justify-center h-full">
+    <div role="status" class="flex h-full items-center justify-center">
       <svg
         aria-hidden="true"
-        class="inline w-8 h-8 mr-2 text-slate-300 animate-spin dark:text-slate-500 fill-slate-500 dark:fill-slate-300"
+        class="mr-2 inline h-8 w-8 animate-spin fill-slate-500 text-slate-300 dark:fill-slate-300 dark:text-slate-500"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

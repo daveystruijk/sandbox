@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   @apply h-full;
   @apply bg-slate-200;
 }
@@ -40,7 +41,7 @@ td {
 }
 
 input {
-  @apply px-1 h-full w-full bg-transparent text-slate-900 truncate;
+  @apply h-full w-full truncate bg-transparent px-1 text-slate-900;
 }
 
 input:hover {
@@ -48,10 +49,10 @@ input:hover {
 }
 
 input:focus {
-  @apply outline outline-1 outline-slate-400 bg-white;
+  @apply bg-white outline outline-1 outline-slate-400;
   position: relative;
 }
 
 input:invalid {
-  @apply outline-1 outline-dotted outline-red-400 bg-white;
+  @apply bg-white outline-dotted outline-1 outline-red-400;
 }

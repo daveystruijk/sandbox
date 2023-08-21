@@ -1,11 +1,10 @@
 import { useParams } from '@solidjs/router';
-import { Component, Match, Switch, createResource } from 'solid-js';
-
+import { Component, createResource, Match, Switch } from 'solid-js';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Spinner } from '../components/Spinner';
 import { client } from '../trpc';
-import { TableContents } from './TableContents';
 import { columnWidth } from './calculations';
+import { TableContents } from './TableContents';
 
 export const TablePage: Component = () => {
   const params = useParams<{ tableName: string }>();

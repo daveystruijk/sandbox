@@ -146,6 +146,9 @@ importers:
       '@nativescript/theme':
         specifier: ^3.0.2
         version: 3.0.2
+      '@sandbox/game-frontend-components':
+        specifier: workspace:^
+        version: link:../../../libs/game/frontend-components
       dominative:
         specifier: 0.0.7-alpha.5
         version: 0.0.7-alpha.5(@nativescript/core@8.5.9)(undom-ng@1.0.10)
@@ -198,10 +201,6 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
-
-  apps/game/frontend-mobile/platforms/android/app/build/intermediates/assets/debug/app: {}
-
-  apps/game/frontend-mobile/platforms/android/app/src/main/assets/app: {}
 
   apps/game/frontend-web:
     dependencies:
