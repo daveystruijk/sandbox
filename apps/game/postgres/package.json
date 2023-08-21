@@ -1,5 +1,5 @@
 {
-  "name": "game-postgres",
+  "name": "@sandbox/game-postgres",
   "scripts": {
     "dev": "docker compose up",
     "cli": "docker compose exec game-postgres psql -U postgres_user game_database"

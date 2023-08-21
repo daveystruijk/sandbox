@@ -12,8 +12,7 @@ module.exports = {
     '^[./]',
   ],
   importOrderParserPlugins: ['typescript', 'jsx'],
-  importOrderSeparation: true,
-  importOrderSortSpecifiers: true,
+  importOrderTypeScriptVersion: '5.0.0',
   overrides: [
     {
       files: '*.ts',

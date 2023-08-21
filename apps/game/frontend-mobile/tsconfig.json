@@ -2,7 +2,6 @@
   "extends": "@sandbox/tsconfig",
   "compilerOptions": {
     "jsx": "preserve",
-    "jsxImportSource": "solid-js",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noEmitHelpers": true,

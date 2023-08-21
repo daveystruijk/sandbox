@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
 import { join } from 'path';
+import dotenv from 'dotenv';
 import { migrate } from 'postgres-migrations';
 import { z } from 'zod';
 

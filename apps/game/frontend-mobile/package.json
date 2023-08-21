@@ -1,6 +1,6 @@
 {
   "name": "@sandbox/game-frontend-mobile",
-  "main": "src/app.ts",
+  "main": "src/App.tsx",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -22,9 +22,16 @@
     "undom-ng": "^1.0.10"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-typescript": "7.18.6",
     "@nativescript/android": "^8.5.1",
     "@nativescript/types": "^8.5.0",
     "@nativescript/webpack": "^5.0.17",
+    "babel": "^6.23.0",
+    "babel-loader": "^9.1.3",
+    "babel-preset-solid": "^1.7.7",
+    "solid-refresh": "^0.5.3",
     "typescript": "^5.1.6"
   },
   "eslintIgnore": [
