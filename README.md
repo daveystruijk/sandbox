@@ -1,4 +1,11 @@
-# Design Goals
+## Getting Started
+
+- `pnpm -r configure-env` (TODO)
+
+- Some packages require additional setup:
+  - `packages/` [Nativescript Environment Setup](https://docs.nativescript.org/environment-setup.html)
+
+## Design Goals
 
 - Use as little boilerplate as possible
 - Use well-supported technologies that will last for a while
@@ -6,13 +13,13 @@
 - Find a good solution for frontend cross-platform dev (android, ios, web)
   - Nativescript + Tailwind seems to work, might be possible to integrate solidjs here
 
-# Architecture Decisions
+## Architecture Decisions
 
 - Use typescript as a main language for the workspace
 - Use rust for some backends (but use package.json for actions)
 - Main verbs: start, dev, build, test, deploy
 
-# Sandbox Apps
+## Sandbox Apps
 
 - Game: A multiplayer browser game.
 
@@ -24,7 +31,7 @@
   - Backend: tRPC
   - Frontend: Solid.js
 
-# TODO
+## TODO
 
 - [ ] Find out way to make managing database migrations less cumbersome
 - [ ] Decide what software design problems to simulate

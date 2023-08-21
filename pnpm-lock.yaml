@@ -18,13 +18,13 @@ importers:
         version: 4.1.0(prettier@3.0.2)
       '@sandbox/eslint-config':
         specifier: workspace:^
-        version: link:packages/configs/eslint-config
+        version: link:configs/eslint-config
       '@sandbox/prettier-config':
         specifier: workspace:^
-        version: link:packages/configs/prettier-config
+        version: link:configs/prettier-config
       '@sandbox/tsconfig':
         specifier: workspace:^
-        version: link:packages/configs/tsconfig
+        version: link:configs/tsconfig
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.4.0
         version: 6.4.0(@typescript-eslint/parser@6.4.0)(eslint@8.47.0)(typescript@5.1.6)
@@ -49,6 +49,12 @@ importers:
       typescript:
         specifier: ^5.1.6
         version: 5.1.6
+
+  configs/eslint-config: {}
+
+  configs/prettier-config: {}
+
+  configs/tsconfig: {}
 
   infra:
     dependencies:
@@ -152,11 +158,7 @@ importers:
         specifier: ^0.34.1
         version: 0.34.1
 
-  packages/configs/eslint-config: {}
-
-  packages/configs/prettier-config: {}
-
-  packages/configs/tsconfig: {}
+  packages/game: {}
 
   packages/game/backend: {}
 
