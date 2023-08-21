@@ -1,6 +1,6 @@
 {
   "name": "@sandbox/game-frontend-mobile",
-  "main": "src/App.tsx",
+  "main": "src/index.tsx",
   "version": "1.0.0",
   "private": true,
   "scripts": {

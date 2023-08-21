@@ -1,9 +1,36 @@
-import { render } from '@nativescript-community/solid-js';
-import { Application } from '@nativescript/core';
-import { document, Node } from 'dominative';
-import { Root } from './Root';
+import { Component, createSignal } from 'solid-js';
 
-document.body.actionBarHidden = false;
-render(() => <Root />, document.body as unknown as Node);
-const create = () => document;
-Application.run({ create });
+export const App: Component = () => {
+  const [count, setCount] = createSignal(0);
+  const increment = () => {
+    setCount((c) => c + 1);
+  };
+
+  return (
+    <>
+      <actionbar title="Hello, SolidJS!"></actionbar>
+      <stacklayout>
+        <listview></listview>
+        <label>
+          You have tapped {count()} time{count() === 1 ? '' : 's'}
+        </label>
+        {
+          // use 'on:___' instead of 'on___' for event handlers
+          // See https://github.com/SudoMaker/dominative-solid#event-handling for detail
+        }
+        <button class="-primary" on:tap={increment}>
+          Tap me!
+        </button>
+        <button
+          style={{
+            color: 'green',
+          }}
+          text={`You have tapped ${count()} time${count() === 1 ? '' : 's'}`}
+          on:tap={() => {
+            alert(`You have tapped ${count()} time${count() === 1 ? '' : 's'}`);
+          }}
+        />
+      </stacklayout>
+    </>
+  );
+};
