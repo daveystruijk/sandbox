@@ -17,6 +17,7 @@
     "@nativescript/theme": "^3.0.2",
     "@sandbox/game-frontend-api-client": "workspace:^",
     "@sandbox/game-frontend-components": "workspace:^",
+    "@valor/nativescript-websockets": "^1.0.5",
     "dominative": "0.0.7-alpha.5",
     "postcss-loader": "^7.3.3",
     "solid-js": "^1.7.8",

@@ -1,3 +1,4 @@
+import { createReconnectingWS } from '@solid-primitives/websocket';
 import config from './config';
 
-export const connectWebsocket = async () => {};
+export const createWebsocket = () => createReconnectingWS(config.WEBSOCKET_URL);

@@ -18,11 +18,11 @@ pub async fn ws_handler(
     println!("{addr} connected.");
     // finalize the upgrade process by returning upgrade callback.
     // we can customize the callback by sending additional info such as address.
-    ws.on_upgrade(move |socket| handle_socket(socket, addr, ctx))
+    ws.on_upgrade(move |socket| handle_socket(socket, addr))
 }
 
 /// Actual websocket statemachine (one will be spawned per connection)
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr, ctx: State<AppContext>) {
+async fn handle_socket(mut socket: WebSocket, who: SocketAddr) {
     //send a ping (unsupported by some browsers) just to kick things off and get a response
     if socket.send(Message::Ping(vec![1, 2, 3])).await.is_ok() {
         println!("Pinged {}...", who);

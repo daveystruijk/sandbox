@@ -6,6 +6,7 @@ import {
 import { Application } from '@nativescript/core';
 import { document, Node, registerElement } from 'dominative';
 import { App } from './App';
+import '@valor/nativescript-websockets';
 
 registerElement('bottomnavigationbar', BottomNavigationBar);
 registerElement('bottomnavigationtab', BottomNavigationTab);

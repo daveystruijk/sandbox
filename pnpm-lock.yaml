@@ -170,9 +170,18 @@ importers:
 
   packages/game/frontend-api-client:
     dependencies:
+      '@solid-primitives/websocket':
+        specifier: ^1.1.0
+        version: 1.1.0(solid-js@1.7.8)
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
+      solid-js:
+        specifier: ^1.7.8
+        version: 1.7.8
+      ws:
+        specifier: ^8.13.0
+        version: 8.13.0
       zod:
         specifier: 3.20.2
         version: 3.20.2
@@ -180,6 +189,9 @@ importers:
       '@sandbox/tsconfig':
         specifier: workspace:^
         version: link:../../../configs/tsconfig
+      '@types/ws':
+        specifier: ^8.5.5
+        version: 8.5.5
       vitest:
         specifier: ^0.34.1
         version: 0.34.1
@@ -247,6 +259,9 @@ importers:
       '@sandbox/game-frontend-components':
         specifier: workspace:^
         version: link:../frontend-components
+      '@valor/nativescript-websockets':
+        specifier: ^1.0.5
+        version: 1.0.5
       dominative:
         specifier: 0.0.7-alpha.5
         version: 0.0.7-alpha.5(@nativescript/core@8.5.9)(undom-ng@1.0.10)
@@ -302,6 +317,9 @@ importers:
 
   packages/game/frontend-web:
     dependencies:
+      '@sandbox/game-frontend-api-client':
+        specifier: workspace:^
+        version: link:../frontend-api-client
       '@sandbox/game-frontend-components':
         specifier: workspace:^
         version: link:../frontend-components
@@ -3643,6 +3661,17 @@ packages:
       }
     dev: true
 
+  /@solid-primitives/websocket@1.1.0(solid-js@1.7.8):
+    resolution:
+      {
+        integrity: sha512-4GLsJsusG4qh5TT/SqPLO7fqUoAXMOspaSls4MFtdzpbfNI/QQSOzSnrTl84wgzu/HdNe68Ho2mvCWLdy/mFtA==,
+      }
+    peerDependencies:
+      solid-js: ^1.6.12
+    dependencies:
+      solid-js: 1.7.8
+    dev: false
+
   /@solidjs/router@0.8.2(solid-js@1.7.8):
     resolution:
       {
@@ -4039,6 +4068,13 @@ packages:
       '@typescript-eslint/types': 6.4.0
       eslint-visitor-keys: 3.4.3
     dev: true
+
+  /@valor/nativescript-websockets@1.0.5:
+    resolution:
+      {
+        integrity: sha512-sAKcQevaQeHS9nYx/AGIzSJ/M6jnXp26qFm0/5MxM9SqtbhHrCJ+RaHpd4Ec2wUA+h2v/8KOb1ghPQjAmuvS0w==,
+      }
+    dev: false
 
   /@vitest/expect@0.34.1:
     resolution:

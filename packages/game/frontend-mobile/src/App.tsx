@@ -1,5 +1,13 @@
-import { Component, createResource, ErrorBoundary, Suspense } from 'solid-js';
-import { getIndex } from '@sandbox/game-frontend-api-client/src/index';
+import {
+  Component,
+  createEffect,
+  createResource,
+  createSignal,
+  ErrorBoundary,
+  For,
+  Suspense,
+} from 'solid-js';
+import { createWebsocket } from '@sandbox/game-frontend-api-client/src/websocket';
 
 export const MainPage: Component = () => {
   return (
@@ -22,17 +30,16 @@ export const MenuButton: Component<{ index: number }> = (props) => {
 };
 
 export const Chat: Component = () => {
-  const [index] = createResource(getIndex);
+  const [messages, setMessages] = createSignal<string[]>([]);
 
-  return (
-    <Suspense fallback={<label>Loading...</label>}>
-      <ErrorBoundary fallback={<label>Error!</label>}>
-        <label>
-          {'parse'} {index()}
-        </label>
-      </ErrorBoundary>
-    </Suspense>
-  );
+  const ws = createWebsocket();
+  ws.addEventListener('message', (e) => console.log(e));
+  ws.addEventListener('error', (e) => console.log(e));
+  createEffect(() => {
+    ws.send('hi');
+  });
+
+  return <For each={messages()}>{(message) => <label>{message}</label>}</For>;
 };
 
 export const App: Component = () => {

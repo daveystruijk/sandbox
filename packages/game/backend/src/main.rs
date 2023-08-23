@@ -1,12 +1,17 @@
 use axum::{
     extract::State,
-    http::StatusCode,
+    http::{Method, StatusCode},
     response::{IntoResponse, Response},
     routing::get,
     Json, Router, Server,
 };
 use sqlx::{postgres::PgPoolOptions, PgPool};
 use std::{env, time::Duration};
+use tower_http::trace::TraceLayer;
+use tower_http::{
+    cors::{Any, CorsLayer},
+    trace::DefaultMakeSpan,
+};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod chat;
@@ -30,7 +35,6 @@ async fn index(ctx: State<AppContext>) -> Response {
 #[tokio::main]
 async fn start() -> anyhow::Result<()> {
     // Initialize logging
-    env::set_var("RUST_LOG", "info");
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -56,10 +60,21 @@ async fn start() -> anyhow::Result<()> {
     // Build app context
     let ctx = AppContext { pg };
 
+    let cors = CorsLayer::new()
+        // allow `GET` and `POST` when accessing the resource
+        .allow_methods(vec![Method::GET, Method::POST])
+        // allow requests from any origin
+        .allow_origin(Any);
+
     // Routes
     let app = Router::new()
         .route("/", get(index))
         .route("/ws", get(websocket::ws_handler))
+        .layer(cors)
+        .layer(
+            TraceLayer::new_for_http()
+                .make_span_with(DefaultMakeSpan::default().include_headers(true)),
+        )
         .with_state(ctx)
         .into_make_service();
 
