@@ -1,12 +1,12 @@
 use axum::{
-    extract::State,
+    extract::{ws::WebSocket, State, WebSocketUpgrade},
     http::{Method, StatusCode},
     response::{IntoResponse, Response},
     routing::get,
     Json, Router, Server,
 };
 use sqlx::{postgres::PgPoolOptions, PgPool};
-use std::{env, time::Duration};
+use std::{env, net::SocketAddr, time::Duration};
 use tower_http::trace::TraceLayer;
 use tower_http::{
     cors::{Any, CorsLayer},
@@ -70,13 +70,13 @@ async fn start() -> anyhow::Result<()> {
     let app = Router::new()
         .route("/", get(index))
         .route("/ws", get(websocket::ws_handler))
+        .with_state(ctx)
         .layer(cors)
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::default().include_headers(true)),
         )
-        .with_state(ctx)
-        .into_make_service();
+        .into_make_service_with_connect_info::<SocketAddr>();
 
     // Server
     let server = Server::bind(&listen_addr.parse()?);

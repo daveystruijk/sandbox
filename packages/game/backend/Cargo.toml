@@ -1,22 +1,22 @@
 [package]
-name = "game-backend"
+name = "game_backend"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = { version = "1.28.0", features = ["full"] }
-axum = { version = "0.6.18", features = ["ws"] }
-anyhow = "1.0.71"
+tokio = { version = "1.32.0", features = ["full"] }
+axum = { version = "0.6.20", features = ["ws"] }
+anyhow = "1.0.75"
 dotenvy = "0.15.7"
-serde = "1.0.162"
-serde_json = "1.0.96"
+serde = "1.0.185"
+serde_json = "1.0.105"
 tracing = "0.1.37"
-tracing-subscriber = { version = "0.3.16", features = ["env-filter"]}
+tracing-subscriber = { version = "0.3.17", features = ["env-filter"]}
 tower = { version = "0.4", features = ["util"] }
-tower-http = { version = "0.4.0", features = ["fs", "trace", "cors"] }
+tower-http = { version = "0.4.3", features = ["fs", "trace", "cors"] }
 futures = "0.3"
 futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
-sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres", "time", "json"] }
-rustls = "0.20.6"
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "time", "json"] }
+rustls = "0.21.6"

@@ -35,6 +35,8 @@ export const Chat: Component = () => {
   const ws = createWebsocket();
   ws.addEventListener('message', (e) => console.log(e));
   ws.addEventListener('error', (e) => console.log(e));
+  ws.addEventListener('open', (e) => console.log(e));
+  ws.addEventListener('close', (e) => console.log(e));
   createEffect(() => {
     ws.send('hi');
   });
