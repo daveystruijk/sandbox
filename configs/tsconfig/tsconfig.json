@@ -6,6 +6,7 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "lib": ["DOM", "ESNext"],
+    "allowSyntheticDefaultImports": true,
 
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true

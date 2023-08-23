@@ -4,7 +4,7 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   content: [
     './src/**/*.{css,xml,html,ts,tsx}',
-    './node_modules/@sandbox/game-frontend-components/**/*.{js,ts,jsx,tsx,css}',
+    './node_modules/@sandbox/game-frontend-components/src/**/*.{js,ts,jsx,tsx,css}',
   ],
   theme: {
     extend: {},

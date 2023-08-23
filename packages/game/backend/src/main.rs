@@ -9,6 +9,7 @@ use sqlx::{postgres::PgPoolOptions, PgPool};
 use std::{env, time::Duration};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
+mod chat;
 mod queries;
 mod websocket;
 

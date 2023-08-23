@@ -1,0 +1,14 @@
+{
+  "name": "@sandbox/game-frontend-api-client",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@sandbox/tsconfig": "workspace:^",
+    "vitest": "^0.34.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "zod": "3.20.2"
+  }
+}

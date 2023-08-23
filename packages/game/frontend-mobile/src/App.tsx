@@ -1,5 +1,5 @@
-import { Component, createSignal } from 'solid-js';
-import { SharedComponent } from '@sandbox/game-frontend-components/src/SharedComponent';
+import { Component, createEffect, createSignal } from 'solid-js';
+import { getIndex } from '@sandbox/game-frontend-api-client/src/index';
 
 export const MainPage: Component = () => {
   return (
@@ -8,30 +8,6 @@ export const MainPage: Component = () => {
         <label>Hi</label>
       </stacklayout>
     </>
-  );
-};
-
-export const TappyRow: Component = () => {
-  const [count, setCount] = createSignal(0);
-  const increment = () => {
-    setCount((c) => c + 1);
-  };
-
-  return (
-    <flexboxlayout class="flex-row">
-      <label>
-        You have tapped {count()} time{count() === 1 ? '' : 's'}
-      </label>
-      <SharedComponent native={true} />
-      <button on:tap={increment}>Tap me!</button>
-      <button
-        class="text-green-500"
-        text={`You have tapped ${count()} time${count() === 1 ? '' : 's'}`}
-        on:tap={() => {
-          alert(`You have tapped ${count()} time${count() === 1 ? '' : 's'}`);
-        }}
-      />
-    </flexboxlayout>
   );
 };
 
@@ -45,35 +21,28 @@ export const MenuButton: Component<{ index: number }> = (props) => {
   );
 };
 
+export const Chat: Component = () => {
+  const [index, setIndex] = createSignal('?');
+
+  createEffect(async () => {
+    const newIndex = await getIndex();
+    setIndex(JSON.parse(newIndex.url));
+  });
+
+  return (
+    <label>
+      {'parse'} {index()}
+    </label>
+  );
+};
+
 export const App: Component = () => {
   return (
     <>
       <flexboxlayout class="flex-col justify-between">
         <scrollview class="flex-grow">
           <flexboxlayout class="flex-col">
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
-            <TappyRow />
+            <Chat />
           </flexboxlayout>
         </scrollview>
         <flexboxlayout class="h-48 flex-row justify-around">

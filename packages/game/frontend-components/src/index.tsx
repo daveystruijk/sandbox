@@ -1,1 +1,2 @@
-import '@nativescript-community/solid-js'; // Necessary for correct JSX.IntrinsicElements definitions
+// The following import sets JSX.IntrinsicElements to the nativescript solidjs definitions (mobile)
+import '@nativescript-community/solid-js';

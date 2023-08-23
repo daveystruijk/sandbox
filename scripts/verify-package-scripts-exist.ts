@@ -10,7 +10,7 @@ const getMissingScripts = (project: Project) => {
     return fieldsToLookFor;
   }
   const scripts = Object.keys(project.manifest.scripts);
-  return scripts.filter((key) => key in fieldsToLookFor);
+  return fieldsToLookFor.filter((field) => field in scripts);
 };
 
 export const verifyPackageScriptsExist = async () => {
