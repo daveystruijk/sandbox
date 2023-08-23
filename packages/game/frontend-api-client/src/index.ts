@@ -1,8 +1,6 @@
-import config from './config';
+import { request } from './http';
 
 export const getIndex = async () => {
-  const url = `${config.BACKEND_URL}/`;
-  console.log(`Getting ${url}`);
-  const result = await fetch(url);
-  return result;
+  const result = await request('/');
+  return result.json();
 };

@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal } from 'solid-js';
+import { Component, createResource, ErrorBoundary, Suspense } from 'solid-js';
 import { getIndex } from '@sandbox/game-frontend-api-client/src/index';
 
 export const MainPage: Component = () => {
@@ -22,17 +22,16 @@ export const MenuButton: Component<{ index: number }> = (props) => {
 };
 
 export const Chat: Component = () => {
-  const [index, setIndex] = createSignal('?');
-
-  createEffect(async () => {
-    const newIndex = await getIndex();
-    setIndex(JSON.parse(newIndex.url));
-  });
+  const [index] = createResource(getIndex);
 
   return (
-    <label>
-      {'parse'} {index()}
-    </label>
+    <Suspense fallback={<label>Loading...</label>}>
+      <ErrorBoundary fallback={<label>Error!</label>}>
+        <label>
+          {'parse'} {index()}
+        </label>
+      </ErrorBoundary>
+    </Suspense>
   );
 };
 
