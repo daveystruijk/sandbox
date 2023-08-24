@@ -7,6 +7,7 @@ use axum::{
 };
 use sqlx::{postgres::PgPoolOptions, PgPool};
 use std::{env, net::SocketAddr, time::Duration};
+use tokio::sync::broadcast;
 use tower_http::trace::TraceLayer;
 use tower_http::{
     cors::{Any, CorsLayer},
@@ -20,7 +21,10 @@ mod websocket;
 
 #[derive(Clone)]
 pub struct AppContext {
+    // Connection to the postgres database
     pg: PgPool,
+    // Broadcast channel for chat messages
+    tx: broadcast::Sender<String>,
 }
 
 async fn index(ctx: State<AppContext>) -> Response {
@@ -58,7 +62,8 @@ async fn start() -> anyhow::Result<()> {
         .await?;
 
     // Build app context
-    let ctx = AppContext { pg };
+    let (tx, _rx) = broadcast::channel(100);
+    let ctx = AppContext { pg, tx };
 
     let cors = CorsLayer::new()
         // allow `GET` and `POST` when accessing the resource

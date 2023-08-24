@@ -1,66 +1,59 @@
-import {
-  Component,
-  createEffect,
-  createResource,
-  createSignal,
-  ErrorBoundary,
-  For,
-  Suspense,
-} from 'solid-js';
-import { createWebsocket } from '@sandbox/game-frontend-api-client/src/websocket';
+import { ScrollView, TextField } from '@nativescript/core';
+import { Component, For } from 'solid-js';
+import { createStore } from 'solid-js/store';
+import { createWebsocketConnection } from '@sandbox/game-frontend-api-client/src/websocket';
+import { SharedComponent } from '@sandbox/game-frontend-components/src/SharedComponent';
 
-export const MainPage: Component = () => {
-  return (
-    <>
-      <stacklayout>
-        <label>Hi</label>
-      </stacklayout>
-    </>
-  );
+type Message = {
+  type: string;
+  data: string;
 };
 
-export const MenuButton: Component<{ index: number }> = (props) => {
-  return (
-    <button
-      class="h1 m-0 bg-slate-300 p-0 text-center"
-      text={`Tab ${props.index}`}
-      textWrap={true}
-    ></button>
-  );
-};
+export const ChatPage: Component = () => {
+  let scrollViewRef: ScrollView | undefined;
+  let inputRef: TextField | undefined;
 
-export const Chat: Component = () => {
-  const [messages, setMessages] = createSignal<string[]>([]);
+  const [messages, setMessages] = createStore<Message[]>([]);
+  const ws = createWebsocketConnection();
 
-  const ws = createWebsocket();
-  ws.addEventListener('message', (e) => console.log(e));
-  ws.addEventListener('error', (e) => console.log(e));
-  ws.addEventListener('open', (e) => console.log(e));
-  ws.addEventListener('close', (e) => console.log(e));
-  createEffect(() => {
-    ws.send('hi');
+  // Receive messages
+  ws.addEventListener('message', (m: Message) => {
+    setMessages(messages.length, m);
+    setTimeout(
+      () => scrollViewRef!.scrollToVerticalOffset(scrollViewRef!.scrollableHeight + 256, true),
+      0,
+    );
   });
 
-  return <For each={messages()}>{(message) => <label>{message}</label>}</For>;
+  // Send message
+  const sendMessage = () => {
+    const message = inputRef!.text;
+    ws.send(message);
+    inputRef!.text = '';
+  };
+
+  return (
+    <flexboxlayout class="flex-col justify-between">
+      <scrollview class="flex flex-grow" ref={scrollViewRef}>
+        <flexboxlayout class="flex-col justify-end">
+          <For each={messages}>
+            {(message) => <SharedComponent native={true} text={message.data} />}
+          </For>
+          ;
+        </flexboxlayout>
+      </scrollview>
+      <flexboxlayout class="flex-none flex-row">
+        <textfield class="flex-grow" on:returnPress={sendMessage} ref={inputRef} />
+        <button on:tap={sendMessage}>Send</button>
+      </flexboxlayout>
+    </flexboxlayout>
+  );
 };
 
 export const App: Component = () => {
   return (
     <>
-      <flexboxlayout class="flex-col justify-between">
-        <scrollview class="flex-grow">
-          <flexboxlayout class="flex-col">
-            <Chat />
-          </flexboxlayout>
-        </scrollview>
-        <flexboxlayout class="h-48 flex-row justify-around">
-          <MenuButton index={0} />
-          <MenuButton index={1} />
-          <MenuButton index={2} />
-          <MenuButton index={3} />
-          <MenuButton index={4} />
-        </flexboxlayout>
-      </flexboxlayout>
+      <ChatPage />
     </>
   );
 };
