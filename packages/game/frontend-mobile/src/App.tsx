@@ -1,13 +1,11 @@
 import { ScrollView, TextField } from '@nativescript/core';
 import { Component, For } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { createWebsocketConnection } from '@sandbox/game-frontend-api-client/src/websocket';
+import {
+  createWebsocketConnection,
+  Message,
+} from '@sandbox/game-frontend-api-client/src/websocket';
 import { SharedComponent } from '@sandbox/game-frontend-components/src/SharedComponent';
-
-type Message = {
-  type: string;
-  data: string;
-};
 
 export const ChatPage: Component = () => {
   let scrollViewRef: ScrollView | undefined;
