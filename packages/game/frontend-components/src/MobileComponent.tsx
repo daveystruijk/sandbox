@@ -1,5 +1,7 @@
 import { Component } from 'solid-js';
 
-export const MobileComponent: Component<{ text: string }> = (props) => {
-  return <label class="text-blue-700">{props.text}</label>;
+export const MobileComponent: Component<{ text: string; style: Record<string, string> }> = (
+  props,
+) => {
+  return <label style={props.style}>{props.text}</label>;
 };

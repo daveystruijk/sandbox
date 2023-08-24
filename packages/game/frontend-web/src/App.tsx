@@ -31,7 +31,7 @@ export const ChatPage: Component = () => {
   return (
     <div class="flex h-full flex-col justify-between">
       <div class="flex flex-grow overflow-y-scroll" ref={scrollViewRef}>
-        <div class="flex-col justify-end">
+        <div class="flex w-full flex-col justify-end">
           <For each={messages}>
             {(message) => <SharedComponent native={false} text={message.data} />}
           </For>
