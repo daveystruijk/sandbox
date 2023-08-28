@@ -317,12 +317,18 @@ importers:
 
   packages/game/frontend-web:
     dependencies:
+      '@melonjs/tiled-inflate-plugin':
+        specifier: ^1.1.1
+        version: 1.1.1(melonjs@15.9.2)
       '@sandbox/game-frontend-api-client':
         specifier: workspace:^
         version: link:../frontend-api-client
       '@sandbox/game-frontend-components':
         specifier: workspace:^
         version: link:../frontend-components
+      melonjs:
+        specifier: ^15.9.2
+        version: 15.9.2
       solid-js:
         specifier: ^1.7.8
         version: 1.7.8
@@ -366,6 +372,8 @@ importers:
       tsx:
         specifier: ^3.12.7
         version: 3.12.7
+
+  packages/game/world-data: {}
 
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -2906,6 +2914,20 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
+  /@melonjs/tiled-inflate-plugin@1.1.1(melonjs@15.9.2):
+    resolution:
+      {
+        integrity: sha512-ujvNDibQJwUxUdBprNkoC8UOWV8JkHUWpAdCgzyVZumvlNfS1cy4jvI5MvgiL04UILq9OK2qXBUFpzaVlmrP6g==,
+      }
+    engines: { node: '>= 19' }
+    peerDependencies:
+      melonjs: ^15.2.1
+    dependencies:
+      js-base64: 3.7.5
+      melonjs: 15.9.2
+      pako: 2.1.0
+    dev: false
+
   /@nativescript-community/solid-js@0.0.4-alpha.4(@babel/preset-typescript@7.18.6)(dominative@0.0.7-alpha.5)(solid-js@1.7.8):
     resolution:
       {
@@ -3702,6 +3724,14 @@ packages:
         integrity: sha512-NpHZBoHTfqyJk0m/s/+CSuAiwtebhYK90mDuf5eylTvgViNOujiaOaxNDxJkQQAsVvHWZftUGAx1EfO1rkKtLg==,
       }
     engines: { node: '>=12' }
+    dev: false
+
+  /@teppeis/multimaps@3.0.0:
+    resolution:
+      {
+        integrity: sha512-ID7fosbc50TbT0MK0EG12O+gAP3W3Aa/Pz4DaTtQtEvlc9Odaqi0de+xuZ7Li2GtK4HzEX7IuRWS/JmZLksR3Q==,
+      }
+    engines: { node: '>=14' }
     dev: false
 
   /@trpc/client@10.36.0(@trpc/server@10.36.0):
@@ -5709,6 +5739,14 @@ packages:
     requiresBuild: true
     dev: true
 
+  /core-js@3.32.1:
+    resolution:
+      {
+        integrity: sha512-lqufgNn9NLnESg5mQeYsxQP5w7wrViSj0jr/kv6ECQiByzQkrn1MKvV0L3acttpDqfQrHLwr2KCMgX5b8X+lyQ==,
+      }
+    requiresBuild: true
+    dev: false
+
   /cors@2.8.5:
     resolution:
       {
@@ -6063,6 +6101,14 @@ packages:
         integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==,
       }
 
+  /earcut@2.2.4:
+    resolution:
+      {
+        integrity: sha512-/pjZsA1b4RPHbeWZQn66SWS8nZZWLQQ23oE3Eam7aroEFGEvwKAsJfZ9ytiEMycfzXWpca4FA9QIOehf7PocBQ==,
+      }
+    requiresBuild: true
+    dev: false
+
   /eastasianwidth@0.2.0:
     resolution:
       {
@@ -6381,7 +6427,6 @@ packages:
       {
         integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==,
       }
-    dev: true
 
   /events@3.3.0:
     resolution:
@@ -6908,6 +6953,13 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
+  /howler@2.2.3:
+    resolution:
+      {
+        integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==,
+      }
+    dev: false
+
   /html-entities@2.3.3:
     resolution:
       {
@@ -7235,6 +7287,13 @@ packages:
         integrity: sha512-oVhqoRDaBXf7sjkll95LHVS6Myyyb1zaunVwk4Z0+WPSW4gjS0pl01zYKHScTuyEhQsFxV5L4DR5r+YqSyqyyg==,
       }
     hasBin: true
+
+  /js-base64@3.7.5:
+    resolution:
+      {
+        integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==,
+      }
+    dev: false
 
   /js-tokens@4.0.0:
     resolution:
@@ -7725,6 +7784,20 @@ packages:
       }
     dev: false
 
+  /melonjs@15.9.2:
+    resolution:
+      {
+        integrity: sha512-qRXFI7A+G/RQ+UvMznJKA7RDznU3HpmEw0EtbrOh2FYL4GLQm7oElIPMkI71SqZOex/1zQb3/ahrI5Uto5jDOA==,
+      }
+    engines: { node: '>= 19' }
+    dependencies:
+      '@teppeis/multimaps': 3.0.0
+      core-js: 3.32.1
+      earcut: 2.2.4
+      eventemitter3: 5.0.1
+      howler: 2.2.3
+    dev: false
+
   /mem@8.1.1:
     resolution:
       {
@@ -8202,6 +8275,13 @@ packages:
     resolution:
       {
         integrity: sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==,
+      }
+    dev: false
+
+  /pako@2.1.0:
+    resolution:
+      {
+        integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==,
       }
     dev: false
 

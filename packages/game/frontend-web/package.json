@@ -15,8 +15,10 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
+    "@melonjs/tiled-inflate-plugin": "^1.1.1",
     "@sandbox/game-frontend-api-client": "workspace:^",
     "@sandbox/game-frontend-components": "workspace:^",
+    "melonjs": "^15.9.2",
     "solid-js": "^1.7.8"
   }
 }

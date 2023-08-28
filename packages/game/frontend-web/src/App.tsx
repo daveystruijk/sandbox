@@ -1,61 +1,37 @@
-import { Component, For } from 'solid-js';
-import { createStore } from 'solid-js/store';
-import {
-  createWebsocketConnection,
-  Message,
-} from '@sandbox/game-frontend-api-client/src/websocket';
-import { SharedComponent } from '@sandbox/game-frontend-components/src/SharedComponent';
-
-export const ChatPage: Component = () => {
-  let scrollViewRef: HTMLDivElement | undefined;
-  let inputRef: HTMLTextAreaElement | undefined;
-
-  const [messages, setMessages] = createStore<Message[]>([]);
-  const ws = createWebsocketConnection();
-
-  // Receive messages
-  ws.addEventListener('message', (m: Message) => {
-    setMessages(messages.length, m);
-    setTimeout(() => scrollViewRef!.scrollTo({ top: scrollViewRef!.scrollHeight + 256 }), 0);
-  });
-
-  // Send message
-  const sendMessage = () => {
-    const message = inputRef!.value;
-    ws.send(message);
-    inputRef!.value = '';
-  };
-
-  return (
-    <div class="flex h-full flex-col justify-between">
-      <div class="flex flex-grow overflow-y-scroll" ref={scrollViewRef}>
-        <div class="flex w-full flex-col justify-end">
-          <For each={messages}>
-            {(message) => <SharedComponent native={false} text={message.data} />}
-          </For>
-        </div>
-      </div>
-      <div class="flex flex-none flex-row">
-        <textarea
-          class="flex-grow border-2 border-slate-300"
-          onkeypress={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              sendMessage();
-            }
-          }}
-          ref={inputRef}
-        />
-        <button onClick={sendMessage}>Send</button>
-      </div>
-    </div>
-  );
-};
+import { Component } from 'solid-js';
+import { Chat } from './Chat';
+import { World } from './World';
 
 const App: Component = () => {
   return (
-    <div class="h-screen w-screen">
-      <ChatPage />
+    <div class="flex h-screen flex-col items-stretch bg-slate-900">
+      <div class="flex h-12 shrink-0 flex-row">
+        <div class="flex w-48">Logo</div>
+        <div class="flex grow"></div>
+        <div class="flex w-48"></div>
+      </div>
+      <div class="flex w-screen grow flex-row items-stretch">
+        <div class="flex w-48 shrink-0 flex-col">
+          <div class="px-3 py-1 text-center text-xs font-semibold uppercase text-slate-600">
+            Left
+          </div>
+        </div>
+        <div class="flex grow flex-col">
+          <World />
+        </div>
+        <div class="flex w-48 shrink-0 flex-col">
+          <div class="px-3 py-1 text-center text-xs font-semibold uppercase text-slate-600">
+            Right
+          </div>
+        </div>
+      </div>
+      <div class="flex h-48 shrink-0 flex-row">
+        <div class="flex w-48"></div>
+        <div class="flex grow">
+          <Chat />
+        </div>
+        <div class="flex w-48"></div>
+      </div>
     </div>
   );
 };

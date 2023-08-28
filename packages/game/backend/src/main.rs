@@ -19,6 +19,15 @@ mod chat;
 mod queries;
 mod websocket;
 
+struct Position {
+    x: i32,
+    y: i32,
+}
+
+enum GameMessage {
+    PlayerMove { from: Position, to: Position },
+}
+
 #[derive(Clone)]
 pub struct AppContext {
     // Connection to the postgres database
